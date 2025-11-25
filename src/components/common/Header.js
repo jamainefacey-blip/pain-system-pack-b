@@ -9,7 +9,7 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isDark, setIsDark] = useState(false);
 
-  // THEME TOGGLE LOGIC — THIS WAS MISSING BEFORE
+  // THEME TOGGLE LOGIC
   useEffect(() => {
     // Check initial theme from localStorage or system preference
     const saved = localStorage.getItem("darkMode");
