@@ -13,6 +13,15 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        card: "var(--card)",
+        "card-foreground": "var(--card-foreground)",
+        border: "var(--border)",
+        muted: "var(--muted)",
+        "muted-foreground": "var(--muted-foreground)",
+        primary: "var(--primary)",
+        "primary-foreground": "var(--primary-foreground)",
+
+        // Keep your custom ones
         gray: { 500: "#9c9c9c" },
         orange: {
           500: "#f97316",
@@ -26,5 +35,3 @@ module.exports = {
   },
   plugins: [],
 };
-
-

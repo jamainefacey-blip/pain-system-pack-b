@@ -2,26 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============ THEME VARIABLES ============ */
+
 /* Light mode (default) */
 :root {
   --background: #ffffff;
-  --foreground: #000000;
-}
-
-/* side bar */
-:root {
-  --sidebar-width: 288px;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted-foreground: #94a3b8;
+  --primary: #f97316;
+  --primary-foreground: #ffffff;
 }
 
 /* Dark mode */
 .dark {
   --background: #000000;
-  --foreground: #ffffff;
+  --foreground: #f1f5f9;
+  --card: #0f0f0f;
+  --card-foreground: #f1f5f9;
+  --border: #27272a;
+  --muted: #71717a;
+  --muted-foreground: #a1a1aa;
+  --primary: #fb923c;
+  --primary-foreground: #0f172a;
 }
 
-/* Apply the colors globally */
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* Your custom sidebar width */
+:root {
+  --sidebar-width: 288px;
 }
+
+/* ============ GLOBAL BODY ============ */
+body {
+  @apply bg-background text-foreground;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* ============ TAILWIND UTILITIES (so bg-card, border-border etc. work) ============ */
+.bg-background      { background-color: var(--background); }
+.text-foreground    { color: var(--foreground); }
+
+.bg-card            { background-color: var(--card); }
+.text-card-foreground { color: var(--card-foreground); }
+
+.border-border      { border-color: var(--border); }
+
+.text-muted         { color: var(--muted); }
+.text-muted-foreground { color: var(--muted-foreground); }
+
+.bg-primary         { background-color: var(--primary); }
+.text-primary       { color: var(--primary); }

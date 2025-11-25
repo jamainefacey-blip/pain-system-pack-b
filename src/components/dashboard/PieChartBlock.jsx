@@ -1,32 +1,39 @@
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts";
+// PieChartBlock.jsx
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend } from "recharts";
 
 const data = [
-  { name: "Mobile", value: 65 },
-  { name: "Desktop", value: 35 },
+  { name: "Mobile", value: 68 },
+  { name: "Desktop", value: 32 },
 ];
 
 const COLORS = ["#f97316", "#fb923c"];
 
 export default function PieChartBlock() {
   return (
-    <div className="bg-white rounded-xl p-4 shadow">
-      <h2 className="font-semibold mb-4">Device Breakdown</h2>
-      <ResponsiveContainer width="100%" height={260}>
+    <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+      <h2 className="text-xl font-semibold mb-6">Traffic Sources</h2>
+      <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
             data={data}
             dataKey="value"
+            nameKey="name"
             cx="50%"
             cy="50%"
-            outerRadius={95}
-            fill="#8884d8"
-            label
+            outerRadius={100}
+            label={({ name, value }) => `${name}: ${value}%`}
           >
             {data.map((entry, index) => (
-              <Cell key={index} fill={COLORS[index]} />
+              <Cell key={`cell-${index}`} fill={COLORS[index]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "var(--card-bg)",
+              border: "1px solid var(--border)",
+            }}
+          />
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>

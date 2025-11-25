@@ -1,23 +1,33 @@
+// LineChartBlock.jsx
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 
 const data = [
-  { name: "Week 1", value: 400 },
-  { name: "Week 2", value: 550 },
-  { name: "Week 3", value: 680 },
-  { name: "Week 4", value: 720 },
+  { name: "Mon", value: 320 },
+  { name: "Tue", value: 480 },
+  { name: "Wed", value: 590 },
+  { name: "Thu", value: 680 },
+  { name: "Fri", value: 820 },
+  { name: "Sat", value: 980 },
+  { name: "Sun", value: 1100 },
 ];
 
 export default function LineChartBlock() {
   return (
-    <div className="bg-white rounded-xl p-4 shadow">
-      <h2 className="font-semibold mb-4">Website Traffic</h2>
-      <ResponsiveContainer width="100%" height={260}>
+    <div className="bg-card rounded-xl shadow-lg border border-border p-6">
+      <h2 className="text-xl font-semibold mb-6">Weekly Traffic</h2>
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="value" stroke="#f97316" strokeWidth={3} />
+          <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" />
+          <XAxis dataKey="name" stroke="var(--foreground)" />
+          <YAxis stroke="var(--foreground)" />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "var(--card-bg)",
+              border: "1px solid var(--border)",
+              borderRadius: "8px",
+            }}
+          />
+          <Line type="monotone" dataKey="value" stroke="#f97316" strokeWidth={3} dot={{ fill: '#f97316' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>

@@ -1,31 +1,36 @@
 export default function ActivityTable() {
   const rows = [
-    { user: "John Doe", action: "Activity One", date: "2025-11-01" },
-    { user: "Alice", action: "Activity Two", date: "2025-11-02" },
-    { user: "Michael", action: "Activity Three", date: "2025-11-03" },
+    { user: "John Doe", action: "Activity", date: "2 hours ago" },
+    { user: "John Doe", action: "Activity", date: "5 hours ago" },
+    { user: "John Doe", action: "Activity", date: "1 day ago" },
+    { user: "John Doe", action: "Activity", date: "2 days ago" },
   ];
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow">
-      <h2 className="font-semibold mb-4">Recent Activity</h2>
-      <table className="w-full text-left">
-        <thead className="border-b">
-          <tr>
-            <th className="py-2">User</th>
-            <th>Action</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, idx) => (
-            <tr key={idx} className="border-b">
-              <td className="py-2">{row.user}</td>
-              <td>{row.action}</td>
-              <td>{row.date}</td>
+    <div className="bg-card rounded-xl shadow-lg border border-border overflow-hidden">
+      <div className="p-5 border-b border-border">
+        <h2 className="text-xl font-semibold">Recent Activity</h2>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left">
+          <thead className="text-muted text-sm uppercase tracking-wider">
+            <tr className="border-b border-border">
+              <th className="py-4 px-6">User</th>
+              <th className="py-4 px-6">Action</th>
+              <th className="py-4 px-6">Time</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {rows.map((row, idx) => (
+              <tr key={idx} className="hover:bg-card/50 transition">
+                <td className="py-4 px-6 font-medium">{row.user}</td>
+                <td className="py-4 px-6 text-muted">{row.action}</td>
+                <td className="py-4 px-6 text-sm text-muted">{row.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
