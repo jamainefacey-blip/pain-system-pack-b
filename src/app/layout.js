@@ -1,13 +1,16 @@
-import ThemeToggle from "@/components/ThemeToggle";
+import "./globals.css";
+import Header from "@/components/common/Header";
+
+export const metadata = {
+  title: "The Pain System",
+  description: "Precision pain management through predictive analytics",
+};
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen">
-        <header className="p-6 bg-background text-foreground flex justify-between items-aligned">
-          <h1>My App</h1>
-          <ThemeToggle />
-        </header>
+    <html lang="en" className="scroll-smooth">
+      <body className="bg-background text-foreground font-sans min-h-screen">
+        <Header />
         {children}
       </body>
     </html>
