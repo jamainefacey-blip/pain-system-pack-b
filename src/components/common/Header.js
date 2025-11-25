@@ -135,7 +135,7 @@ export default function Header() {
 
             {/* Portal & VST in Mobile Menu */}
             <Link
-              href="/portal/login"
+              href="/login"
               className="block w-full text-center py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full"
               onClick={() => setIsOpen(false)}
             >
