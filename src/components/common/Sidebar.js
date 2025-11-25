@@ -62,10 +62,11 @@ export default function Sidebar({ type }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-background border-r border-gray-200 dark:border-gray-800
+        className={`
+          fixed inset-y-0 left-0 z-50 w-72 bg-background border-r border-gray-200 dark:border-gray-800
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 lg:static lg:z-auto
+          lg:relative lg:translate-x-0 lg:z-auto lg:inset-auto
         `}
       >
         <div className="flex flex-col h-full">

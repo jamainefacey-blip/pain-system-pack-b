@@ -5,18 +5,15 @@ import Footer from "@/components/common/Footer";
 
 export default function VSTLayout({ children }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950">
       <Header />
 
       <div className="flex flex-1">
-        <Sidebar type="vst" />
-
-        <div className="flex-1 lg:ml-64">
-          <main className="p-4 sm:p-6 lg:p-10 min-h-screen">
-            {children}
-          </main>
-        </div>
-      </div>
+  <Sidebar type="vst" />
+  <main className="flex-1 p-4 sm:p-6 lg:p-10">
+    {children}
+  </main>
+</div>
 
       <Footer />
     </div>

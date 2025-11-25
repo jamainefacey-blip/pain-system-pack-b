@@ -8,6 +8,11 @@
   --foreground: #000000;
 }
 
+/* side bar */
+:root {
+  --sidebar-width: 288px;
+}
+
 /* Dark mode */
 .dark {
   --background: #000000;
