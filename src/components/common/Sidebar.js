@@ -70,6 +70,8 @@ export default function Sidebar({ type }) {
         `}
       >
         <div className="flex flex-col h-full">
+         {/* Header Spacer */}
+      <div className="h-16 md:h-20 lg:h-24"></div>
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
             <h1 className="text-2xl font-bold text-orange-500">
@@ -87,7 +89,10 @@ export default function Sidebar({ type }) {
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {links.map((link) => {
               const Icon = link.icon;
-              const isActive = pathname.startsWith(link.href);
+              const isActive = 
+                              link.href === "/vst" 
+                                ? pathname === "/vst" || pathname === "/vst/"
+                                : pathname.startsWith(link.href);
 
               return (
                 <Link

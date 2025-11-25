@@ -1,6 +1,8 @@
 export default function VSTHome() {
   return (
-    <div className="max-w-7xl mx-auto space-y-16 py-10">
+    <div className="max-w-7xl mx-auto space-y-16 py-1">
+     {/* Header Spacer */}
+      <div className="h-8 md:h-10 lg:h-12"></div>
       <div className="text-center">
         <h1 className="text-5xl sm:text-6xl font-bold mb-6">Welcome to VST</h1>
         <p className="text-xl text-gray-500 max-w-2xl mx-auto">
