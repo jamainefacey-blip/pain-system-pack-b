@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, ArrowRight, TrendingUp, Sun, Moon } from "lucide-react";
+import Link from "next/link";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +12,6 @@ export default function Header() {
 
   // THEME TOGGLE LOGIC
   useEffect(() => {
-    // Check initial theme from localStorage or system preference
     const saved = localStorage.getItem("darkMode");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const initial = saved ? saved === "true" : prefersDark;
@@ -20,7 +20,6 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    // Apply theme
     if (isDark) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("darkMode", "true");
@@ -30,7 +29,7 @@ export default function Header() {
     }
   }, [isDark]);
 
-  // Scroll hide/show logic
+  // Scroll hide/show
   useEffect(() => {
     const handleScroll = () => {
       const current = window.scrollY;
@@ -46,10 +45,10 @@ export default function Header() {
   }, [lastScrollY]);
 
   const navItems = [
-    { name: "Home", href: "#" },
-    { name: "About", href: "#" },
-    { name: "Services", href: "#" },
-    { name: "Contact", href: "#" },
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Services", href: "/services" },
+    { name: "Contact", href: "/contact" },
   ];
 
   const ThemeToggle = () => (
@@ -68,18 +67,18 @@ export default function Header() {
         isVisible ? "translate-y-0 opacity-100" : "-translate-y-32 opacity-0"
       }`}
     >
-      <div className="bg-background/90 backdrop-blur-xl shadow-2xl rounded-full border border-gray-200 dark:border-gray-700 px-6 sm:px-8">
-        <div className="flex justify-between items-center h-16 gap-6">
+      <div className="bg-background/90 backdrop-blur-xl shadow-2xl rounded-full border border-gray-200 dark:border-gray-700 px-4 sm:px-6 md:px-8">
+        <div className="flex justify-between items-center h-16 gap-2 sm:gap-4 md:gap-6">
           {/* Logo */}
-          <a href="#" className="flex items-center space-x-2 flex-shrink-0">
-            <TrendingUp className="w-7 h-7 text-orange-500" />
-            <span className="text-xl font-bold text-foreground font-sans">
+          <a href="/" className="flex items-center space-x-2 flex-shrink-0 min-w-0">
+            <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-orange-500 flex-shrink-0" />
+            <span className="text-base sm:text-xl font-bold text-foreground font-sans truncate">
               The Pain System
             </span>
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
             {navItems.map((item) => (
               <a
                 key={item.name}
@@ -89,17 +88,28 @@ export default function Header() {
                 {item.name}
               </a>
             ))}
-            <a
-              href="#"
+
+            {/* Portal Button */}
+            <Link
+              href="/login"
               className="inline-flex items-center px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition transform hover:scale-105"
             >
               Portal <ArrowRight className="ml-2 w-4 h-4" />
-            </a>
+            </Link>
+
+            {/* NEW: VST Button */}
+            <Link
+              href="/vst"
+              className="inline-flex items-center px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition transform hover:scale-105 shadow-lg"
+            >
+              VST <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+
             <ThemeToggle />
           </div>
 
           {/* Mobile Controls */}
-          <div className="md:hidden flex items-center gap-3">
+          <div className="lg:hidden flex items-center gap-3 flex-shrink-0">
             <ThemeToggle />
             <button onClick={() => setIsOpen(!isOpen)} className="p-2">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -122,13 +132,23 @@ export default function Header() {
                 {item.name}
               </a>
             ))}
-            <a
-              href="#"
+
+            {/* Portal & VST in Mobile Menu */}
+            <Link
+              href="/portal/login"
               className="block w-full text-center py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full"
               onClick={() => setIsOpen(false)}
             >
               Portal
-            </a>
+            </Link>
+
+            <Link
+              href="/vst"
+              className="block w-full text-center py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-bold rounded-full shadow-md"
+              onClick={() => setIsOpen(false)}
+            >
+              VST App
+            </Link>
           </div>
         </div>
       )}
