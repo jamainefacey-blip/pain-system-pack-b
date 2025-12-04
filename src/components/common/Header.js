@@ -46,9 +46,9 @@ export default function Header() {
 
   const navItems = [
     { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Services", href: "/services" },
-    { name: "Contact", href: "/contact" },
+    { name: "About", href: "/website/about" },
+    { name: "Services", href: "/website/services" },
+    { name: "Contact", href: "/website/contact" },
   ];
 
   const ThemeToggle = () => (
@@ -99,7 +99,7 @@ export default function Header() {
 
             {/* NEW: VST Button */}
             <Link
-              href="/vst"
+              href="/automation/vst-website-automation"
               className="inline-flex items-center px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition transform hover:scale-105 shadow-lg"
             >
               VST <ArrowRight className="ml-2 w-4 h-4" />
@@ -143,7 +143,7 @@ export default function Header() {
             </Link>
 
             <Link
-              href="/vst"
+              href="/vst/vst-website-automation"
               className="block w-full text-center py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-bold rounded-full shadow-md"
               onClick={() => setIsOpen(false)}
             >

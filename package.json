@@ -9,14 +9,18 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@octokit/rest": "^22.0.1",
     "lucide-react": "^0.554.0",
+    "nanoid": "^5.1.6",
     "next": "16.0.4",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "react-hot-toast": "^2.6.0",
     "recharts": "^3.5.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "baseline-browser-mapping": "^2.8.32",
     "eslint": "^9",
     "eslint-config-next": "16.0.4",
     "postcss": "^8.4.47",
