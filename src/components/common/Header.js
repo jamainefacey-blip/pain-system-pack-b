@@ -46,6 +46,7 @@ export default function Header() {
 
   const navItems = [
     { name: "Home", href: "/" },
+    { name: "Projects", href: "/website/projects" },
     { name: "About", href: "/website/about" },
     { name: "Services", href: "/website/services" },
     { name: "Contact", href: "/website/contact" },
@@ -94,16 +95,10 @@ export default function Header() {
               href="/login"
               className="inline-flex items-center px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition transform hover:scale-105"
             >
-              Portal <ArrowRight className="ml-2 w-4 h-4" />
+              Login <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
 
-            {/* NEW: VST Button */}
-            <Link
-              href="/automation/vst-website-automation"
-              className="inline-flex items-center px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition transform hover:scale-105 shadow-lg"
-            >
-              VST <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
+           
 
             <ThemeToggle />
           </div>

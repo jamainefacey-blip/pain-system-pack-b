@@ -1,6 +1,6 @@
-# Websiste UI
+# Websiste UI + Admin Projects Logic
 
-UI Scafolld
+WARNING: ALways run git pull before pushing code to sync with the projects.json file otherwise it will be overiddien if local commits are pushed.
 ---
 
 ## Table of Contents
@@ -33,9 +33,11 @@ The dummy web application is implemented according to Phase 1 requirements. It i
 - Distinct sections for Public Website, Portal (authentication), and VST application areas
 
 Key notes:
-- No real backend calls or data handling in placeholder sections
-- Static routing for the Portal Dashboard
-- All components currently use structural placeholder blocks
+- Some components currently use structural placeholder blocks
+
+Changes:  - Added front end page that views projects from the projects.json file in built website.
+          - Admin page route to view all projects, add new projects and perform other CRUD operations. Even allows bulk edits. Search feature
+            Note: Admin fetches and performs CRUD operations to the github file. So dont forget to set the required .env files
 
 ---
 
@@ -46,6 +48,7 @@ Key notes:
 - Styling: CSS Modules / Tailwind CSS / Styled Components 
 - Node.js
 - npm or yarn
+- Github - Project.json file storage
 
 ---
 
@@ -58,8 +61,7 @@ Key notes:
   - About
   - Contact
   - Services
-  - Portal (button)
-  - VST App (button)
+  - Login
 - Footer (consistent navigation)
 - Homepage sections:
   - Hero
@@ -68,14 +70,18 @@ Key notes:
   - Contact
   - Optional testimonial (toggle as needed)
 
-### Portal Authentication Section
+### Admin Authentication Section
 
-- Entry point: Portal button navigates to login
+- Entry point: Login button on header navigates to the Login Page
+-Login page uses .env variables: ADMIN_EMAIL and ADMIN_PASSWORD
 - Authentication placeholders:
-  - Login
+  - Login 
   - Signup
   - Forgot Password
-  - (Note: No real authentication logic yet)
+  - (Note: No real authentication logic yet for signu and forgot password)
+
+### Portal Application Section
+- Entry via Portal Home button on side bar
 - Portal Dashboard (static routing):
   - Sidebar navigation:
     - Dashboard
@@ -86,7 +92,7 @@ Key notes:
 
 ### VST Application Section
 
-- Entry via VST App button
+- Entry via VST Home button on side bar
 - VST home with a sidebar to:
   - VST Home
   - Search
@@ -103,21 +109,39 @@ Key notes:
       - login/page.js
       - signup/page.js
       - forgot-password/page.js
-    - about/page.js
-    - contact/page.js
-    - services/page.js
+    - website
+      - about/page.js
+      - contact/page.js
+      - services/page.js
+      - projects
+        - [slug]
+          - page.jsx
+        - page.jsx
+    - api
+      - auth
+        - check/route.js
+        - login/route.js
+      -projects
+        - route.js holds all logic for projects admin CRUD operations to projects.json
+    - admin
+      - projects
+        - AdminProjectsClient.jsx
+        - page.jsx
     - portal/
       - dashboard/page.js
       - builder/page.js
       - my-projects/page.js
       - notifications/page.js
       - logout/page.js
-    - vst/
-      - home/page.js
-      - search/page.js
-      - results/page.js
-      - map/page.js
-      - safety/page.js
+    - automations
+      - vst-website-automation/
+        - home/page.js
+        - search/page.js
+        - results/page.js
+        - map/page.js
+        - safety/page.js
+      - projects-builder
+        -page.jsx
   - components/
     - common/
       - Footer.js
@@ -151,6 +175,17 @@ Key notes:
 - Node.js (>= 14.x; or as required by your project)
 - npm or yarn
 - Git
+
+.env file/environmental variables set with these variables:
+
+ADMIN_EMAIL=email to use for login
+ADMIN_PASSWORD=password used for login
+
+GITHUB_TOKEN=github_pat_**** (click on profile -> setting -> Dveloper Option at th left sidebar botton -> Persoal Access Tokens
+                              -> Fine-grained tokens -> Give it a name and add read and right permissions to all repository permissions)
+GITHUB_OWNER=Github username
+GITHUB_REPO=Github repository name(i.e: pain-system-pack-b)
+GITHUB_BRANCH=Repo Branch(master/main etc)
 
 ### Installation
 

@@ -16,7 +16,7 @@ export default function AdminProjectsClient() {
     title: '',
     slug: '',
     description: '',
-    status: 'draft',
+    status: 'in-progress',
     category: 'website',
   });
   const [loading, setLoading] = useState(true);
@@ -83,7 +83,7 @@ export default function AdminProjectsClient() {
     if (res.ok) {
       toast.success(editingProject ? 'Updated!' : 'Created!');
       fetchProjects();
-      setFormData({ title: '', slug: '', description: '', status: 'draft', category: 'website' });
+      setFormData({ title: '', slug: '', description: '', status: 'in-progress', category: 'website' });
       setEditingProject(null);
     }
   };
@@ -117,10 +117,14 @@ export default function AdminProjectsClient() {
     const res = await fetch('/api/projects', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...project, status: project.status === 'live' ? 'draft' : 'live' }),
+      body: JSON.stringify({ ...project, status: project.status === 'active ' ? 'in-progress' : project.status === 'in-progress'
+      ? 'paused'
+      : 'active' }),
     });
     if (res.ok) {
-      toast.success(project.status === 'live' ? 'Unpublished' : 'Published');
+      toast.success(project.status === 'active ' ? 'in-progress' : project.status === 'in-progress'
+      ? 'paused'
+      : 'active');
       fetchProjects();
     }
   };
@@ -134,18 +138,19 @@ export default function AdminProjectsClient() {
       if (action === 'delete') {
         await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
       } else if (action === 'publish') {
-        await fetch('/api/projects', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...project, status: 'live' }),
-        });
-      } else if (action === 'unpublish') {
-        await fetch('/api/projects', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...project, status: 'draft' }),
-        });
-      }
+  await fetch('/api/projects', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...project, status: 'active' }),
+  });
+} else if (action === 'unpublish') {
+  await fetch('/api/projects', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...project, status: 'paused' }),
+  });
+}
+
     }
     toast.success(`Bulk ${action} completed`);
     setSelectedIds(new Set());
@@ -259,9 +264,16 @@ export default function AdminProjectsClient() {
                             <td className="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">{project.title}</td>
                             <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300 font-mono">/{project.slug}</td>
                             <td className="px-6 py-4">
-                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${project.status === 'live' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}`}>
+                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                project.status === 'active'
+                                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                : project.status === 'in-progress'
+                                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                              }`}>
                                 {project.status}
                               </span>
+
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300 capitalize">{project.category}</td>
                             <td className="px-6 py-4">
@@ -321,8 +333,10 @@ export default function AdminProjectsClient() {
                       onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
                       className="px-6 py-4 rounded-2xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     >
-                      <option value="draft">Draft</option>
-                      <option value="live">Live</option>
+                      <option value="active">Active</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="paused">Paused</option>
+
                     </select>
                     <select
                       value={formData.category}

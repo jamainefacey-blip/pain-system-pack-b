@@ -8,25 +8,40 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
+const adminLinks = [
+  { href: "/admin/projects", label: "Projects", icon: FolderOpen },
+  { href: "/portal/dashboard", label: "Dashboard", icon: Home },
+  { href: "/automation/vst-website-automation", label: "VST Home", icon: Home },
+];
+
 const portalLinks = [
   { href: "/portal/dashboard", label: "Dashboard", icon: Home },
   { href: "/portal/projects", label: "My Projects", icon: FolderOpen },
   { href: "/portal/notifications", label: "Notifications", icon: Bell },
   { href: "/portal/builder", label: "Builder", icon: Hammer },
+  { href: "/admin/projects", label: "Admin Projects", icon: FolderOpen },
+  { href: "/automation/vst-website-automation", label: "VST Home", icon: Home },
 ];
 
 const vstLinks = [
-  { href: "/vst", label: "Home", icon: Home },
-  { href: "/vst/search", label: "Search", icon: Search },
-  { href: "/vst/results", label: "Results", icon: FolderOpen },
-  { href: "/vst/map", label: "Map", icon: MapPin },
-  { href: "/vst/safety", label: "Safety", icon: Shield },
+  { href: "/automation/vst-website-automation", label: "Home", icon: Home },
+  { href: "/automation/vst-website-automation/search", label: "Search", icon: Search },
+  { href: "/automation/vst-website-automation/results", label: "Results", icon: FolderOpen },
+  { href: "/automation/vst-website-automation/map", label: "Map", icon: MapPin },
+  { href: "/automation/vst-website-automation/safety", label: "Safety", icon: Shield },
+  { href: "/admin/projects", label: "Projects Admin", icon: FolderOpen },
+  { href: "/portal/dashboard", label: "Portal", icon: Home },
 ];
 
 export default function Sidebar({ type }) {
   const pathname = usePathname();
   const router = useRouter();
-  const links = type === "portal" ? portalLinks : vstLinks;
+  const links =
+  type === "portal" ? portalLinks :
+  type === "vst" ? vstLinks :
+  type === "admin" ? adminLinks :
+  [];
+
 
   // Mobile menu state (shared across all Sidebar instances)
   const [isOpen, setIsOpen] = useState(false);
