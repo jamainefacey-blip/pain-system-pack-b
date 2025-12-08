@@ -4,10 +4,10 @@
     "slug": "example-project",
     "title": "Example Project edit",
     "description": "This is a sample project description.",
-    "status": "paused",
+    "status": "active",
     "category": "builder",
     "createdAt": "2025-12-03T00:00:00Z",
-    "updatedAt": "2025-12-08T19:35:54.832Z"
+    "updatedAt": "2025-12-08T19:36:03.878Z"
   },
   {
     "title": "second projetc",
