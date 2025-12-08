@@ -8,5 +8,15 @@
     "category": "builder",
     "createdAt": "2025-12-03T00:00:00Z",
     "updatedAt": "2025-12-08T19:01:29.172Z"
+  },
+  {
+    "title": "second projetc",
+    "slug": "second-projetc",
+    "description": "description",
+    "status": "draft",
+    "category": "app",
+    "id": "OGJW1KuLNwGSzErRQDfTS",
+    "updatedAt": "2025-12-08T19:01:47.988Z",
+    "createdAt": "2025-12-08T19:01:47.987Z"
   }
 ]
