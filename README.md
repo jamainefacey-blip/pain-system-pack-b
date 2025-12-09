@@ -1,6 +1,8 @@
-# Websiste UI + Admin Projects Logic
+# Website UI + Admin Projects Logic
 
-WARNING: ALways run git pull before pushing code to sync with the projects.json file otherwise it will be overiddien if local commits are pushed.
+> ⚠️ **IMPORTANT:** Always run `git pull` before pushing any code.  
+> If the `projects.json` file was updated on GitHub and you push without pulling, you will overwrite the live data.
+
 ---
 
 ## Table of Contents
@@ -9,50 +11,56 @@ WARNING: ALways run git pull before pushing code to sync with the projects.json 
 - [Tech Stack](#tech-stack)
 - [Features & Structure](#features--structure)
   - [Public Website](#public-website)
-  - [Portal (Authentication) Section](#portal-authentication-section)
-  - [VST Application Section](#vst-application-section)
-  - [Folder Structure (Visualized)](#folder-structure-visualized)
+  - [Admin Authentication](#admin-authentication)
+  - [Portal Application](#portal-application)
+  - [Automations & Project Builder](#automations--project-builder)
+  - [Folder Structure](#folder-structure)
   - [Design Theme](#design-theme)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
   - [Environment Variables](#environment-variables)
+  - [Installation](#installation)
   - [Development](#development)
-- [Build & Run (Production)](#build-run-production)
+- [Build & Run (Production)](#build--run-production)
+- [Deployment to Netlify](#deployment-to-netlify)
 - [Testing](#testing)
-- [Deployment](#deployment)
 
 ---
 
 ## Overview
 
-The dummy web application is implemented according to Phase 1 requirements. It includes:
+This project includes a complete public website, an admin portal, and a project management system powered by a `projects.json` file stored in GitHub.
 
-- Placeholder pages, navigation flows, layouts, and a clean folder structure
-- A neutral theme (black, white, orange accents)
-- Distinct sections for Public Website, Portal (authentication), and VST application areas
+The website loads all its project data from `projects.json`, and the admin portal allows CRUD operations that write directly to GitHub using API requests. Each update to the file triggers Netlify to redeploy the site, ensuring all project data stays synced.
 
-Key notes:
-- Some components currently use structural placeholder blocks
+### Key Features Added
 
-Changes:  - Added front end page that views projects from the projects.json file in built website.
-          - LOGIN goes to portal and can navigate to all admin related routes: automation/projects builder, vst, admin/projects etc
-          - Admin page route to view all projects, add new projects and perform other CRUD operations. Even allows bulk edits. Search feature
-          -impeented automation/projects-buider to allow CRUD
-            Note: Admin fetches and performs CRUD operations to the github file. So dont forget to set the required .env files
-            -moved all website pages into a website folder as per instructions.
-            added api folder that holds routes to check if user is logged in, and admin another  route for making changes to projects.json
+- Website Projects page displays all items from `projects.json`
+- Dynamic project detail pages using `[slug]`
+- `/admin/projects` provides:
+  - View all
+  - Create
+  - Edit
+  - Delete
+  - Bulk edit
+  - Search
+- `/automations/projects-builder` enables full CRUD as well
+- API endpoints created for:
+  - Authentication
+  - GitHub file CRUD operations
+- Website pages reorganized into `/website/`
+- Portal dashboard displays data from `projects.json`
 
 ---
 
 ## Tech Stack
 
-- Next.js 16
-- React 19+ (App Router)
-- Styling: CSS Modules / Tailwind CSS / Styled Components 
-- Node.js
-- npm or yarn
-- Github - Project.json file storage
+- **Next.js 16** (App Router)
+- **React 19**
+- **Node.js**
+- **TailwindCSS / CSS Modules / Styled Components**
+- **GitHub API** for remote file storage
+- **Netlify** deployment
 
 ---
 
@@ -60,50 +68,35 @@ Changes:  - Added front end page that views projects from the projects.json file
 
 ### Public Website
 
-- Header with navigation:
-  - Home
-  - About
-  - Contact
-  - Services
-  - Login
-- Footer (consistent navigation)
-- Homepage sections:
-  - Hero
-  - About
-  - Services preview
-  - Contact
-  - Optional testimonial (toggle as needed)
+- Home
+- About
+- Services
+- Contact
+- Projects (dynamic)
+- Each project has its own slug route
+- Login entry point
 
-### Admin Authentication Section
+### Admin Authentication
 
-- Entry point: Login button on header navigates to the Login Page
--Login page uses .env variables: ADMIN_EMAIL and ADMIN_PASSWORD
-- Authentication placeholders:
-  - Login 
-  - Signup
-  - Forgot Password
-  - (Note: No real authentication logic yet for signu and forgot password)
+- Login uses:
+  - `ADMIN_EMAIL`
+  - `ADMIN_PASSWORD`
+- Signup & reset pages exist as placeholders
 
-### Portal Application Section
-- Entry via Portal Home button on side bar
-- Portal Dashboard (static routing):
-  - Sidebar navigation:
-    - Dashboard
-    - My Projects
-    - Notifications
-    - Builder
-    - Logout (returns to login)
+### Portal Application
 
-### VST Application Section
+- Dashboard
+- My Projects
+- Builder
+- Notifications
+- Logout
 
-- Entry via VST Home button on side bar
-- VST home with a sidebar to:
-  - VST Home
-  - Search
-  - Results
-  - Map
-  - Safety
-- No API calls or data handling in this stage
+### Automations & Project Builder
+
+- CRUD for `projects.json`
+- GitHub write operations
+- Safe validation
+
 
 ### Folder Structure (Visualized)
 
@@ -189,26 +182,74 @@ GITHUB_OWNER=Github username
 GITHUB_REPO=Github repository name(i.e: pain-system-pack-b)
 GITHUB_BRANCH=Repo Branch(master/main etc)
 
+
+---
+
 ### Installation
 
-```bash  
-# clone the repository  
-git clone https://github.com/Gabriel265/thepainsystem.git  
-cd thepainsystem  
+## Local:
 
-# install dependencies  
-npm install  
-# or  
-yarn install 
+https://github.com/Gabriel265/pain-system-pack-b.git
+cd thepainsystem
 
-
-# start in development mode (hot-reload)
+npm install
 npm run dev
-# or
-yarn dev
 
 
-# build for production
-npm run build
-# start the production server
-npm run start
+## Deployment to Netlify:
+
+1. Push your project to GitHub
+
+Netlify pulls from your repo.
+
+2. Connect Netlify to your GitHub repo
+
+Go to Netlify → Add new site → Import from Git
+
+Choose your repo
+
+Leave defaults:
+
+Build: npm run build
+
+Publish: .next
+
+3. Add environment variables
+
+Go to:
+
+Site Settings → Environment Variables
+
+Add:
+
+ADMIN_EMAIL
+ADMIN_PASSWORD
+GITHUB_TOKEN
+GITHUB_OWNER
+GITHUB_REPO
+GITHUB_BRANCH
+
+4. Enable auto-redeploy
+
+Go to:
+
+Site Settings → Build & Deploy → Continuous Deployment
+
+Turn on:
+
+Auto Publish Deploys
+
+5. How updates work
+
+Admin updates projects via the portal → GitHub file updates
+
+OR admin edits the file directly in GitHub
+
+GitHub commit triggers Netlify
+
+Netlify rebuilds
+
+Website shows updated data
+
+
+
