@@ -4,13 +4,14 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
-  Home, FolderOpen, Bell, Hammer, Search, MapPin, Shield, X, LogOut 
+  Home, FolderOpen, Bell, Hammer, Search, MapPin, Shield, X, LogOut, ChevronDown, ChevronRight 
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const adminLinks = [
   { href: "/admin/projects", label: "Projects", icon: FolderOpen },
-  { href: "/portal/dashboard", label: "Dashboard", icon: Home },
+  { divider: true },
+  { href: "/portal/dashboard", label: "Portal Dashboard", icon: Home },
   { href: "/automation/vst-website-automation", label: "VST Home", icon: Home },
 ];
 
@@ -19,6 +20,7 @@ const portalLinks = [
   { href: "/portal/projects", label: "My Projects", icon: FolderOpen },
   { href: "/portal/notifications", label: "Notifications", icon: Bell },
   { href: "/portal/builder", label: "Builder", icon: Hammer },
+  { divider: true },
   { href: "/admin/projects", label: "Admin Projects", icon: FolderOpen },
   { href: "/automation/vst-website-automation", label: "VST Home", icon: Home },
 ];
@@ -29,29 +31,31 @@ const vstLinks = [
   { href: "/automation/vst-website-automation/results", label: "Results", icon: FolderOpen },
   { href: "/automation/vst-website-automation/map", label: "Map", icon: MapPin },
   { href: "/automation/vst-website-automation/safety", label: "Safety", icon: Shield },
-  { href: "/admin/projects", label: "Projects Admin", icon: FolderOpen },
+  { divider: true },
+  { href: "/admin/projects", label: "Admin Panel", icon: FolderOpen },
   { href: "/portal/dashboard", label: "Portal", icon: Home },
 ];
 
 export default function Sidebar({ type }) {
   const pathname = usePathname();
   const router = useRouter();
-  const links =
-  type === "portal" ? portalLinks :
-  type === "vst" ? vstLinks :
-  type === "admin" ? adminLinks :
-  [];
 
+  const links = 
+    type === "portal" ? portalLinks :
+    type === "vst" ? vstLinks :
+    type === "admin" ? adminLinks : [];
 
-  // Mobile menu state (shared across all Sidebar instances)
+  // Mobile menu open state
   const [isOpen, setIsOpen] = useState(false);
+  // Desktop collapsible state
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Close when route changes
+  // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
-  // Escape key support
+  // Escape key to close mobile menu
   useEffect(() => {
     if (isOpen) {
       const handleEscape = (e) => e.key === "Escape" && setIsOpen(false);
@@ -61,13 +65,21 @@ export default function Sidebar({ type }) {
   }, [isOpen]);
 
   const handleLogout = () => {
-    setIsOpen(false);
-    router.push("/");
+    document.cookie = 'user_role=; path=/; max-age=0';
+    router.push('/');
+  };
+
+  // Dynamic title based on current section
+  const getTitle = () => {
+    if (pathname.startsWith("/admin")) return "Admin Panel";
+    if (pathname.startsWith("/portal")) return "Pain Portal";
+    if (pathname.startsWith("/automation")) return "VST System";
+    return "Menu";
   };
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop for mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/60 z-40 lg:hidden"
@@ -78,83 +90,120 @@ export default function Sidebar({ type }) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed inset-y-0 left-0 z-50 w-72 bg-background border-r border-gray-200 dark:border-gray-800
-          transform transition-transform duration-300 ease-in-out
+          fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800
+          transform transition-all duration-300 ease-in-out flex flex-col
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:relative lg:translate-x-0 lg:z-auto lg:inset-auto
+          lg:relative lg:translate-x-0 lg:z-auto
+          ${isCollapsed ? "lg:w-20" : "lg:w-72"}
         `}
       >
         <div className="flex flex-col h-full">
-         {/* Header Spacer */}
-      <div className="h-16 md:h-20 lg:h-24"></div>
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
-            <h1 className="text-2xl font-bold text-orange-500">
-              {type === "portal" ? "Pain Portal" : "VST"}
-            </h1>
+
+          {/* Header Spacer */}
+          <div className="h-16 md:h-20 lg:h-24"></div>
+
+          {/* Collapsible Header */}
+          <div 
+            className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800 cursor-pointer select-none"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+          >
+            <div className={`flex items-center gap-3 transition-all ${isCollapsed ? "justify-center" : ""}`}>
+              {isCollapsed ? (
+                <ChevronRight className="w-6 h-6 text-orange-600" />
+              ) : (
+                <ChevronDown className="w-6 h-6 text-orange-600" />
+              )}
+              {!isCollapsed && (
+                <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">
+                  {getTitle()}
+                </h1>
+              )}
+            </div>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-            {links.map((link) => {
+          {/* Navigation */}
+          <nav className={`flex-1 p-4 space-y-1 overflow-y-auto ${isCollapsed ? "px-3" : ""}`}>
+            {links.map((link, index) => {
+              if (link.divider) {
+                return (
+                  <div key={`divider-${index}`} className="my-4 border-t border-gray-200 dark:border-gray-700" />
+                );
+              }
+
               const Icon = link.icon;
-              const isActive = 
-                              link.href === "/vst" 
-                                ? pathname === "/vst" || pathname === "/vst/"
-                                : pathname.startsWith(link.href);
+              const isActive = pathname.startsWith(link.href);
 
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                    isActive
+                  className={`
+                    flex items-center rounded-lg transition-all duration-200 group
+                    ${isCollapsed ? "justify-center px-3" : "px-4 gap-3"}
+                    ${isActive
                       ? "bg-orange-500 text-white shadow-md"
-                      : "text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
-                  }`}
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    }
+                  `}
+                  title={isCollapsed ? link.label : ""}
                 >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium">{link.label}</span>
+                  <div className={`py-3 ${isCollapsed ? "" : "flex items-center gap-3 w-full"}`}>
+                    <Icon className="w-5 h-5 flex-shrink-0" />
+                    {!isCollapsed && <span className="font-medium">{link.label}</span>}
+                  </div>
                 </Link>
               );
             })}
           </nav>
 
-          {/* Logout Button + Copyright */}
-          <div className="border-t border-gray-200 dark:border-gray-800 p-4 space-y-4">
+          {/* Logout + Copyright */}
+          <div className={`border-t border-gray-200 dark:border-gray-800 p-4 space-y-4 ${isCollapsed ? "px-3" : ""}`}>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all font-medium"
+              className={`
+                w-full flex items-center rounded-lg text-red-600 dark:text-red-400
+                hover:bg-red-50 dark:hover:bg-red-900/20 transition-all font-medium
+                ${isCollapsed ? "justify-center px-3" : "px-4 gap-3"}
+              `}
+              title={isCollapsed ? "Logout" : ""}
             >
-              <LogOut className="w-5 h-5" />
-              <span>Logout</span>
+              <div className="py-3 flex items-center gap-3">
+                <LogOut className="w-5 h-5" />
+                {!isCollapsed && <span>Logout</span>}
+              </div>
             </button>
-            <p className="text-xs text-gray-500 text-center">
-              © 2025 The Pain System
-            </p>
+
+            {!isCollapsed && (
+              <p className="text-xs text-gray-500 text-center">
+                © 2025 The Pain System
+              </p>
+            )}
           </div>
         </div>
       </aside>
 
-      {/* Floating Mobile Menu Button */}
+      {/* Mobile Floating Button */}
       <MobileMenuButton isOpen={isOpen} onToggle={() => setIsOpen(!isOpen)} />
     </>
   );
 }
 
-// Floating Action Button (FAB) for mobile
+// Mobile FAB
 export function MobileMenuButton({ isOpen, onToggle }) {
   return (
     <button
       onClick={onToggle}
       className="lg:hidden fixed bottom-6 right-6 z-50 bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95"
-      aria-label="Open menu"
+      aria-label="Toggle menu"
     >
       {isOpen ? (
         <X className="w-7 h-7" />
