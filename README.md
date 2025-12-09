@@ -36,8 +36,12 @@ Key notes:
 - Some components currently use structural placeholder blocks
 
 Changes:  - Added front end page that views projects from the projects.json file in built website.
+          - LOGIN goes to portal and can navigate to all admin related routes: automation/projects builder, vst, admin/projects etc
           - Admin page route to view all projects, add new projects and perform other CRUD operations. Even allows bulk edits. Search feature
+          -impeented automation/projects-buider to allow CRUD
             Note: Admin fetches and performs CRUD operations to the github file. So dont forget to set the required .env files
+            -moved all website pages into a website folder as per instructions.
+            added api folder that holds routes to check if user is logged in, and admin another  route for making changes to projects.json
 
 ---
 
@@ -119,10 +123,10 @@ Changes:  - Added front end page that views projects from the projects.json file
         - page.jsx
     - api
       - auth
-        - check/route.js
-        - login/route.js
+        - check/route.js - checking if user is admin to make changes to rojects.json
+        - login/route.js - logging in
       -projects
-        - route.js holds all logic for projects admin CRUD operations to projects.json
+        - route.js - holds all logic for projects admin CRUD operations to projects.json
     - admin
       - projects
         - AdminProjectsClient.jsx
@@ -148,8 +152,6 @@ Changes:  - Added front end page that views projects from the projects.json file
       - Header.js
       - Sidebar.js
       - ThemeToggle.js
-    - dashboard/
-      - (dashboard components)
     - sections/
       - AboutSection.jsx
       - ContactSection.jsx
