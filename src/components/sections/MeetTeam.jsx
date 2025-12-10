@@ -18,7 +18,7 @@ const teamMembers = [
   },
   {
     id: 3,
-    name: "Alex Johnson",
+    name: "John Smith",
     title: "TEAM MEMBER • ROLE",
     image: "https://picsum.photos/400/500?random=3"
   }
@@ -58,7 +58,7 @@ export default function MeetTeam() {
           </h1>
           
           <p className="mt-8 text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-xs">
-            Meet our professional team dedicated to delivering quality solutions and services.
+            Meet our team dedicated to delivering quality solutions and services.
           </p>
         </div>
 
