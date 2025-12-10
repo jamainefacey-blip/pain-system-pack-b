@@ -78,7 +78,7 @@ const ServicesOffering = () => {
               {/* Main Heading */}
               <div className="flex-1">
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-tight">
-                  WE OFFER
+                  PREMIUM OFFERS
                 </h1>
                 <p className="mt-6 text-sm sm:text-base text-gray-500 max-w-md">
                   These are generic placeholder services. Use these sections to showcase offerings for any type of business or project.
