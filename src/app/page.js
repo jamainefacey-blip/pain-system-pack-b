@@ -8,7 +8,7 @@ import Testimonials from "@/components/sections/Testimonials.jsx";
 export default function Home() {
   return (
     <>
-      <HeroSection />
+      <HeroSection/>
       <ServicesOffering />
       <AboutSection />
       <MeetTeam />
