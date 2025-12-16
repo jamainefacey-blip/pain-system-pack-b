@@ -51,6 +51,17 @@ The website loads all its project data from `projects.json`, and the admin porta
 - Website pages reorganized into `/website/`
 - Portal dashboard displays data from `projects.json`
 
+### Third Update changes
+
+Added text to the Hero section and created a new Accessibility & Inclusion page with introductory content.
+
+Updated all project pages to reflect statuses: Live, In-Build, and Concept.
+
+Portal functionality remains fully operational and connected to all projects.
+
+Updated project details and descriptions according to specifications.
+
+Added a Search button to the navigation header for global access. Currently, it’s a placeholder.
 ---
 
 ## Tech Stack
@@ -71,6 +82,7 @@ The website loads all its project data from `projects.json`, and the admin porta
 - Home
 - About
 - Services
+- Accessibility & Inclusion
 - Contact
 - Projects (dynamic)
 - Each project has its own slug route
@@ -110,6 +122,7 @@ The website loads all its project data from `projects.json`, and the admin porta
       - about/page.js
       - contact/page.js
       - services/page.js
+      - accessibility-&-inclusion/page.js
       - projects
         - [slug]
           - page.jsx
