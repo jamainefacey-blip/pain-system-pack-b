@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 
 const owner = process.env.GITHUB_OWNER;
 const repo = process.env.GITHUB_REPO;
-const branch = process.env.GITHUB_BRANCH || "master";
+const branch = process.env.GITHUB_BRANCH || "main";
 const token = process.env.GITHUB_TOKEN;
 
 const githubFilePath = "src/project-store/projects.json";

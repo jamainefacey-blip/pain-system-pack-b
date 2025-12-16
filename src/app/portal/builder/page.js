@@ -20,7 +20,7 @@ export default function ProjectBuilderPage() {
     title: '',
     slug: '',
     description: '',
-    status: 'in-progress',
+    status: 'In-Build',
     category: 'portal',
   });
 
@@ -48,7 +48,7 @@ export default function ProjectBuilderPage() {
               title: project.title || '',
               slug: project.slug || '',
               description: project.description || '',
-              status: project.status || 'in-progress',
+              status: project.status || 'In-Build',
               category: project.category || 'website',
             });
             setIsEditing(true);
@@ -185,9 +185,9 @@ export default function ProjectBuilderPage() {
                   onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
                   className="w-full px-5 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-orange-500"
                 >
-                  <option value="active">Active (Published)</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="paused">Paused</option>
+                  <option value="Live">Live (Published)</option>
+                  <option value="In-Build">In Build</option>
+                  <option value="Concept">Concept</option>
                 </select>
               </div>
 
