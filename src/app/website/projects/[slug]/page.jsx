@@ -12,23 +12,44 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-// ---------- utils ----------
+/* =======================
+   UTILITIES / CONSTANTS
+   ======================= */
+
+/**
+ * Absolute path to the local project store.
+ */
 const PROJECTS_PATH = path.join(process.cwd(), "src/project-store/projects.json");
 
+/**
+ * Read all projects from the JSON store.
+ * Single read point
+ */
 function readProjects() {
-  // Single read point (easy to swap to fetch/DB later)
   const raw = fs.readFileSync(PROJECTS_PATH, "utf8");
   return JSON.parse(raw);
 }
 
+/**
+ * Normalize raw status values coming from data.
+ * Ensures UI logic only deals with known states.
+ */
 function normalizeStatus(status) {
   if (!status) return "concept";
+
   const s = status.toLowerCase().trim();
+
   if (s === "Live") return "live";
   if (s.includes("build") || s.includes("development")) return "in-build";
+
+  // Fallback protection for unexpected values
   return ["live", "in-build", "concept"].includes(s) ? s : "concept";
 }
 
+/**
+ * Status configuration map.
+ * Controls iconography, colors, messaging, and UI behavior per status.
+ */
 const STATUS = {
   live: {
     icon: Rocket,
@@ -61,25 +82,52 @@ const STATUS = {
   },
 };
 
-// ---------- data ----------
+/* =======================
+   DATA ACCESS
+   ======================= */
+
+/**
+ * Fetch a single project by slug.
+ * Returns null when not found so caller can trigger 404.
+ */
 async function getProjectBySlug(slug) {
   const projects = readProjects();
   const found = projects.find((p) => p.slug === slug);
+
   if (!found) return null;
+
   return { ...found, status: normalizeStatus(found.status) };
 }
 
+/**
+ * Static generation helper.
+ * Ensures all project pages are pre-rendered at build time.
+ */
 export async function generateStaticParams() {
   return readProjects().map((p) => ({ slug: p.slug }));
 }
 
-// ---------- page ----------
+/* =======================
+   PAGE
+   ======================= */
+
 export default async function ProjectPage({ params }) {
+  /**
+   * Slug comes from dynamic route segment.
+   */
   const { slug } = await params;
 
+  /**
+   * Load project data.
+   * Redirect to 404 if slug is invalid.
+   */
   const project = await getProjectBySlug(slug);
   if (!project) notFound();
 
+  /**
+   * Date formatting for metadata display.
+   * Falls back to em dash when not provided.
+   */
   const createdAt = project.createdAt
     ? new Date(project.createdAt).toLocaleDateString("en-US", {
         year: "numeric",
@@ -96,66 +144,85 @@ export default async function ProjectPage({ params }) {
       })
     : "—";
 
+  /**
+   * Status configuration lookup.
+   * Drives visual style and conditional sections.
+   */
   const cfg = STATUS[project.status];
   const StatusIcon = cfg.icon;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Spacer for fixed navigation */}
       <div className="h-16 md:h-20" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Back */}
+          {/* Back navigation */}
           <Link
             href="/website/projects"
             className="inline-flex items-center gap-2 text-sm md:text-base text-primary font-semibold hover:underline mb-6 md:mb-8"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Projects
+            <ArrowLeft className="w-4 h-4" />
+            Back to Projects
           </Link>
 
-          {/* Card */}
+          {/* Main project card */}
           <div
             className={`bg-card border-2 ${cfg.border} rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl`}
           >
-            {/* Badges */}
+            {/* Status and category badges */}
             <div className="flex flex-wrap items-center gap-3 mb-6 md:mb-8">
               <span
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm md:text-base font-semibold ${cfg.bg} ${cfg.text}`}
               >
-                <StatusIcon className="w-4 h-4 md:w-5 md:h-5" /> {cfg.label}
+                <StatusIcon className="w-4 h-4 md:w-5 md:h-5" />
+                {cfg.label}
               </span>
+
               {project.category && (
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm md:text-base bg-muted/20 text-muted-foreground border border-border">
-                  <Tag className="w-4 h-4" /> {project.category}
+                  <Tag className="w-4 h-4" />
+                  {project.category}
                 </span>
               )}
             </div>
 
-            {/* Title */}
+            {/* Project title */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-light mb-6 md:mb-8 leading-tight">
               {project.title}
             </h1>
 
-            {/* Status message */}
-            <div className={`${cfg.bg} border ${cfg.border} rounded-xl p-4 md:p-6 mb-6 md:mb-8`}>
+            {/* Status explanation block */}
+            <div
+              className={`${cfg.bg} border ${cfg.border} rounded-xl p-4 md:p-6 mb-6 md:mb-8`}
+            >
               <div className="flex items-start gap-3">
-                <AlertCircle className={`w-5 h-5 md:w-6 md:h-6 mt-0.5 ${cfg.text}`} />
-                <p className={`text-sm md:text-base ${cfg.text}`}>{cfg.message}</p>
+                <AlertCircle
+                  className={`w-5 h-5 md:w-6 md:h-6 mt-0.5 ${cfg.text}`}
+                />
+                <p className={`text-sm md:text-base ${cfg.text}`}>
+                  {cfg.message}
+                </p>
               </div>
             </div>
 
-            {/* Description */}
+            {/* Description section */}
             <section className="mb-8 md:mb-10">
-              <h2 className="text-xl md:text-2xl font-semibold mb-4">Description</h2>
+              <h2 className="text-xl md:text-2xl font-semibold mb-4">
+                Description
+              </h2>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                 {project.description}
               </p>
             </section>
 
-            {/* Details */}
+            {/* Conditional details section */}
             {cfg.showDetails ? (
               <section className="border-t border-border pt-6 md:pt-8">
-                <h2 className="text-xl md:text-2xl font-semibold mb-6">Project Details</h2>
+                <h2 className="text-xl md:text-2xl font-semibold mb-6">
+                  Project Details
+                </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   <Detail label="Created" value={createdAt} />
                   <Detail label="Last Updated" value={updatedAt} />
@@ -163,6 +230,7 @@ export default async function ProjectPage({ params }) {
               </section>
             ) : (
               <section className="border-t border-border pt-6 md:pt-8">
+                {/* Concept-only placeholder */}
                 <div className="bg-muted/10 rounded-xl p-6 md:p-8 text-center">
                   <Lightbulb className="w-12 h-12 md:w-16 md:h-16 text-purple-500 mx-auto mb-4" />
                   <h3 className="text-lg md:text-xl font-semibold mb-3">
@@ -175,7 +243,7 @@ export default async function ProjectPage({ params }) {
               </section>
             )}
 
-            {/* Actions */}
+            {/* Primary actions */}
             <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-10">
               <Link
                 href="/website/projects"
@@ -183,6 +251,8 @@ export default async function ProjectPage({ params }) {
               >
                 Explore More Projects
               </Link>
+
+              {/* External launch link only shown for live projects */}
               {project.status === "live" && project.url && (
                 <a
                   href={project.url}
@@ -196,14 +266,19 @@ export default async function ProjectPage({ params }) {
             </div>
           </div>
 
-          {/* Support */}
+          {/* Support block for live projects only */}
           {project.status === "live" && (
             <div className="mt-6 md:mt-8 bg-card border border-border rounded-2xl p-6 md:p-8">
-              <h3 className="text-lg md:text-xl font-semibold mb-4">Need Help?</h3>
+              <h3 className="text-lg md:text-xl font-semibold mb-4">
+                Need Help?
+              </h3>
               <p className="text-sm md:text-base text-muted-foreground mb-4">
                 This project is live. If something breaks, contact support.
               </p>
-              <Link href="/contact" className="text-primary font-semibold hover:underline">
+              <Link
+                href="/website/contact"
+                className="text-primary font-semibold hover:underline"
+              >
                 Contact Support →
               </Link>
             </div>
@@ -214,6 +289,13 @@ export default async function ProjectPage({ params }) {
   );
 }
 
+/* =======================
+   SUBCOMPONENTS
+   ======================= */
+
+/**
+ * Simple key/value display for project metadata.
+ */
 function Detail({ label, value }) {
   return (
     <div className="bg-muted/10 rounded-xl p-4 md:p-6">

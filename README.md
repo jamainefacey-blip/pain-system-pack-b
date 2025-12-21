@@ -1,268 +1,78 @@
-# Website UI + Admin Projects Logic
-
-> ⚠️ **IMPORTANT:** Always run `git pull` before pushing any code.  
-> If the `projects.json` file was updated on GitHub and you push without pulling, you will overwrite the live data.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Features & Structure](#features--structure)
-  - [Public Website](#public-website)
-  - [Admin Authentication](#admin-authentication)
-  - [Portal Application](#portal-application)
-  - [Automations & Project Builder](#automations--project-builder)
-  - [Folder Structure](#folder-structure)
-  - [Design Theme](#design-theme)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Environment Variables](#environment-variables)
-  - [Installation](#installation)
-  - [Development](#development)
-- [Build & Run (Production)](#build--run-production)
-- [Deployment to Netlify](#deployment-to-netlify)
-- [Testing](#testing)
-
----
-
-## Overview
-
-This project includes a complete public website, an admin portal, and a project management system powered by a `projects.json` file stored in GitHub.
-
-The website loads all its project data from `projects.json`, and the admin portal allows CRUD operations that write directly to GitHub using API requests. Each update to the file triggers Netlify to redeploy the site, ensuring all project data stays synced.
-
-### Key Features Added
-
-- Website Projects page displays all items from `projects.json`
-- Dynamic project detail pages using `[slug]`
-- `/admin/projects` provides:
-  - View all
-  - Create
-  - Edit
-  - Delete
-  - Bulk edit
-  - Search
-- `/automations/projects-builder` enables full CRUD as well
-- API endpoints created for:
-  - Authentication
-  - GitHub file CRUD operations
-- Website pages reorganized into `/website/`
-- Portal dashboard displays data from `projects.json`
-
-### Third Update changes
-
-Added text to the Hero section and created a new Accessibility & Inclusion page with introductory content.
-
-Updated all project pages to reflect statuses: Live, In-Build, and Concept.
-
-Portal functionality remains fully operational and connected to all projects.
-
-Updated project details and descriptions according to specifications.
-
-Added a Search button to the navigation header for global access. Currently, it’s a placeholder.
----
-
-## Tech Stack
-
-- **Next.js 16** (App Router)
-- **React 19**
-- **Node.js**
-- **TailwindCSS / CSS Modules / Styled Components**
-- **GitHub API** for remote file storage
-- **Netlify** deployment
-
----
-
-## Features & Structure
-
-### Public Website
-
-- Home
-- About
-- Services
-- Accessibility & Inclusion
-- Contact
-- Projects (dynamic)
-- Each project has its own slug route
-- Login entry point
-
-### Admin Authentication
-
-- Login uses:
-  - `ADMIN_EMAIL`
-  - `ADMIN_PASSWORD`
-- Signup & reset pages exist as placeholders
-
-### Portal Application
-
-- Dashboard
-- My Projects
-- Builder
-- Notifications
-- Logout
-
-### Automations & Project Builder
-
-- CRUD for `projects.json`
-- GitHub write operations
-- Safe validation
-
-
-### Folder Structure (Visualized)
-
-- src/
-  - app/
-    - (auth)/
-      - login/page.js
-      - signup/page.js
-      - forgot-password/page.js
-    - website
-      - about/page.js
-      - contact/page.js
-      - services/page.js
-      - accessibility-&-inclusion/page.js
-      - projects
-        - [slug]
-          - page.jsx
-        - page.jsx
-    - api
-      - auth
-        - check/route.js - checking if user is admin to make changes to rojects.json
-        - login/route.js - logging in
-      -projects
-        - route.js - holds all logic for projects admin CRUD operations to projects.json
-    - admin
-      - projects
-        - AdminProjectsClient.jsx
-        - page.jsx
-    - portal/
-      - dashboard/page.js
-      - builder/page.js
-      - my-projects/page.js
-      - notifications/page.js
-      - logout/page.js
-    - automations
-      - vst-website-automation/
-        - home/page.js
-        - search/page.js
-        - results/page.js
-        - map/page.js
-        - safety/page.js
-      - projects-builder
-        -page.jsx
-  - components/
-    - common/
-      - Footer.js
-      - Header.js
-      - Sidebar.js
-      - ThemeToggle.js
-    - sections/
-      - AboutSection.jsx
-      - ContactSection.jsx
-      - Hero.jsx
-      - MeetTeam.jsx
-      - ServicesOffering.jsx
-      - Testimonial.js
-  - assets/
-
-### Design Theme
-
-- Neutral, generic look:
-  - Base colors: black + white
-  - Accent color: orange for interactive elements (buttons, highlights)
-- Provides a clean, modern appearance that can be easily adapted to a specific use case
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (>= 14.x; or as required by your project)
-- npm or yarn
-- Git
-
-.env file/environmental variables set with these variables:
-
-ADMIN_EMAIL=email to use for login
-ADMIN_PASSWORD=password used for login
-
-GITHUB_TOKEN=github_pat_**** (click on profile -> setting -> Dveloper Option at th left sidebar botton -> Persoal Access Tokens
-                              -> Fine-grained tokens -> Give it a name and add read and right permissions to all repository permissions)
-GITHUB_OWNER=Github username
-GITHUB_REPO=Github repository name(i.e: pain-system-pack-b)
-GITHUB_BRANCH=Repo Branch(master/main etc)
-
-
----
-
-### Installation
-
-## Local:
-
-https://github.com/Gabriel265/pain-system-pack-b.git
-cd thepainsystem
-
-npm install
-npm run dev
-
-
-## Deployment to Netlify:
-
-1. Push your project to GitHub
-
-Netlify pulls from your repo.
-
-2. Connect Netlify to your GitHub repo
-
-Go to Netlify → Add new site → Import from Git
-
-Choose your repo
-
-Leave defaults:
-
-Build: npm run build
-
-Publish: .next
-
-3. Add environment variables
-
-Go to:
-
-Site Settings → Environment Variables
-
-Add:
-
-ADMIN_EMAIL
-ADMIN_PASSWORD
-GITHUB_TOKEN
-GITHUB_OWNER
-GITHUB_REPO
-GITHUB_BRANCH
-
-4. Enable auto-redeploy
-
-Go to:
-
-Site Settings → Build & Deploy → Continuous Deployment
-
-Turn on:
-
-Auto Publish Deploys
-
-5. How updates work
-
-Admin updates projects via the portal → GitHub file updates
-
-OR admin edits the file directly in GitHub
-
-GitHub commit triggers Netlify
-
-Netlify rebuilds
-
-Website shows updated data
-
-
-
+pain-system-pack-b Website Application
+Overview 
+The websitesholds both placeholder pages and functional pages.
+Placeholder pages include: Functionality starts from login where we use environmental variables no hardcoded credentials. The other functionality is on projects with with CRUD operations working with the projects.json file as the database.
+
+1. Website (Public Area) 
+
+Header 
+The top navigation includes: - Home - About - Contact - Accessibility - Login (Button)
+
+Footer 
+Mirrors the header for consistent navigation with some additional links if need be. 
+
+Homepage 
+
+The homepage contains: - Hero area - About section - Services preview - Contact section
+
+header and footer files are in src/components/common/ folder. home page sections are in src/components/sections/ folder. 
+Website pages are in src/app/website/ folder.
+
+2. Administrator Area
+Entry point is the Login
+
+Uses environmental variables that have to be set in .env file locally or in vercel/netlify environmental variables sections.
+variable names are ADMIN_EMAIL & ADMIN_PASSWORD. here we have three main sections admin, portal and automation folders. admin folders holds a projects folder that holds the CRUD operations on the projects. Automation has two folders projects-builder also projects CRUD operations and vst-website-sutomation for vst place holder. Laastly we have the portal folder which has /builder, /dashboard, /notifcation and /projects folders. in each main folder for the three sections there is alayout file that hold the rules on which buttons from the sidebar, to display depensing on which section we are for easy navigation between the three sections.
+
+          i. ADMIN SYSTEM
+              - Admin login; project table; create/edit/delete; JSON sync
+
+          ii.PORTAL (PRIVATE / ADMIN — PHASE 1)
+              - Admin login only
+              - Project CRUD (create, read, update, delete)
+              - Status tagging: idea / build / live
+
+          iii. Autmation
+
+              i. PROJECTS BUILDER
+                    - Create, edit, delete projects; toggle Draft/Live; write to JSON.
+
+              ii. VST AUTOMATION FOLDER
+                    - VST-specific only; no global logic.
+
+3. All routing is done with files in the folder src/app/api/ folder. 
+  i.auth - this holds route for login credentials check and also a route to check if user is admin or not
+  ii. projects - this now hold the admin side logic for CRUD operation to the projects.json file in github. Since we cant change the fie directly in production in vercel/netlif since its all static after build, we use this fiel which changes the actual projects.json file stored in github.
+
+4. FOLDER STRUCTURE
+/src/components
+    - /common - footer, header and sidebar
+    - /section - landing page sections (hero,about,services,contact)
+/src/app/
+    - /(auth) - login page(login)
+    - /project-store/projects.json
+    - /admin
+    - /portal
+      - /builder
+      - /dashboard
+      - /notifications
+      - /projects
+    - /website
+      - /about
+      - /accessibility-&-inclusion
+      - /contact
+      - /projects
+      - /services
+    - /automation/projects-builder
+    - /automation/vst-website-automation
+    - /api
+      - /auth
+        - check
+        - login
+      - /projects
+
+/src/project-store/projects.json
+
+5. Deloyemnt. Now we use two main branches for this, the main branch which is set for deployment for production in vercel and the ai-deploy branch which is used for development. When there is a push on ai-deploy branch 
+
+6. code is in easy structure and format for easy AI assited development. Code can be given to ai models and can easily understand structure with the imports and comments in most files.

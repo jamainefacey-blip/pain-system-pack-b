@@ -140,7 +140,7 @@ export default function Header() {
           <a href="/" className="flex items-center space-x-2 flex-shrink-0 min-w-0">
             <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-orange-500 flex-shrink-0" />
             <span className="text-base sm:text-xl font-bold text-foreground font-sans truncate">
-              The Pain System
+              Website Name
             </span>
           </a>
 

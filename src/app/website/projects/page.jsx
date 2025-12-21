@@ -4,23 +4,36 @@ import Link from 'next/link';
 import { Rocket, Wrench, Lightbulb, Eye } from 'lucide-react';
 
 export default function ProjectsPage() {
+  /**
+   * Read project data directly from local JSON store.
+   * Any schema changes to projects.json are reflected here.
+   */
   const filePath = path.join(process.cwd(), 'src/project-store/projects.json');
   const projects = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
+  /**
+   * Normalize project status values to a controlled set.
+   * This prevents inconsistent casing or wording from breaking UI logic.
+   */
   const normalizedProjects = projects.map(p => ({
     ...p,
     status: normalizeStatus(p.status),
   }));
 
+  /**
+   * Split projects by lifecycle phase.
+   * These arrays directly control which sections render.
+   */
   const liveProjects = normalizedProjects.filter(p => p.status === 'live');
   const inBuildProjects = normalizedProjects.filter(p => p.status === 'in-build');
   const conceptProjects = normalizedProjects.filter(p => p.status === 'concept');
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Spacer to offset fixed header */}
       <div className="h-16 md:h-20" />
 
-      {/* HERO */}
+      {/* HERO SECTION */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-3xl">
           <p className="text-sm font-medium text-primary mb-4">
@@ -38,10 +51,11 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      {/* STATUS GUIDE */}
+      {/* STATUS LEGEND / GUIDE */}
       <section className="border-t border-border">
         <div className="container mx-auto px-4 py-12">
           <div className="grid sm:grid-cols-3 gap-6 max-w-4xl">
+            {/* Visual explanation of project statuses */}
             <StatusGuide
               icon={Rocket}
               title="Live"
@@ -64,7 +78,7 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      {/* LIVE */}
+      {/* LIVE PROJECTS SECTION */}
       {liveProjects.length > 0 && (
         <ProjectSection
           title="Live projects"
@@ -74,7 +88,7 @@ export default function ProjectsPage() {
         />
       )}
 
-      {/* IN BUILD */}
+      {/* IN-BUILD PROJECTS SECTION */}
       {inBuildProjects.length > 0 && (
         <section className="bg-card border-t border-border">
           <ProjectSection
@@ -86,18 +100,18 @@ export default function ProjectsPage() {
         </section>
       )}
 
-      {/* CONCEPT */}
+      {/* CONCEPT PROJECTS SECTION */}
       {conceptProjects.length > 0 && (
         <ProjectSection
           title="Concept projects"
           icon={Lightbulb}
           iconColor="text-purple-600"
           projects={conceptProjects}
-          clickable={false}
+          clickable={false} // Explicitly disable navigation for concepts
         />
       )}
 
-      {/* SHOWROOM */}
+      {/* FUTURE / PLACEHOLDER SECTION */}
       <section className="border-t border-border">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-3xl">
@@ -123,15 +137,27 @@ export default function ProjectsPage() {
 
 /* ---------------- HELPERS ---------------- */
 
+/**
+ * Normalize raw status strings from data source into
+ * a strict, predictable set used by UI logic.
+ */
 function normalizeStatus(status) {
   if (!status) return 'concept';
+
   const value = status.toLowerCase().trim();
+
   if (value === 'Live') return 'live';
   if (value.includes('build') || value.includes('dev')) return 'in-build';
   if (['live', 'concept'].includes(value)) return value;
+
+  // Fallback for unknown or malformed values
   return 'concept';
 }
 
+/**
+ * Small legend component used to explain project statuses.
+ * Purely presentational.
+ */
 function StatusGuide({ icon: Icon, title, description, color }) {
   const colors = {
     green: 'text-green-600',
@@ -150,6 +176,10 @@ function StatusGuide({ icon: Icon, title, description, color }) {
   );
 }
 
+/**
+ * Section wrapper for a group of projects.
+ * Handles layout, heading, and icon.
+ */
 function ProjectSection({
   title,
   icon: Icon,
@@ -165,6 +195,7 @@ function ProjectSection({
           <h2 className="text-3xl font-serif font-light">{title}</h2>
         </div>
 
+        {/* Project grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map(project => (
             <ProjectCard
@@ -179,6 +210,10 @@ function ProjectSection({
   );
 }
 
+/**
+ * Individual project card.
+ * Conditionally wrapped in a Link when navigation is allowed.
+ */
 function ProjectCard({ project, clickable }) {
   const content = (
     <div
@@ -195,6 +230,7 @@ function ProjectCard({ project, clickable }) {
         {project.description}
       </p>
 
+      {/* Call-to-action is dependent on project state */}
       {clickable && project.status === 'live' ? (
         <span className="text-sm text-primary font-medium">
           View project →
@@ -207,6 +243,7 @@ function ProjectCard({ project, clickable }) {
     </div>
   );
 
+  // Only wrap in Link when navigation is allowed
   if (clickable && project.status === 'live') {
     return (
       <Link href={`/website/projects/${project.slug}`} className="block h-full">
@@ -218,6 +255,10 @@ function ProjectCard({ project, clickable }) {
   return content;
 }
 
+/**
+ * Visual badge representing project status.
+ * Styling is mapped directly to normalized status values.
+ */
 function StatusBadge({ status }) {
   const map = {
     live: 'bg-green-500/10 text-green-600',

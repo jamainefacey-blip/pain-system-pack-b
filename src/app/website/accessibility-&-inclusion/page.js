@@ -79,9 +79,7 @@ export default function AccessibilityPage() {
       {/* HERO */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-sm text-primary font-medium mb-4">
-            Accessibility by design
-          </p>
+          
 
           <h1 className="text-4xl md:text-5xl font-serif font-light leading-tight mb-6">
             Built for everyone,

@@ -18,7 +18,6 @@ export default function AdminDashboard() {
           setProjects(data);
         }
       } catch (err) {
-        console.error("Failed to load projects");
       } finally {
         setLoading(false);
       }
