@@ -28,5 +28,15 @@
     "id": "XxtfUUV4N2_AGN5FIojM_",
     "updatedAt": "2025-12-21T09:38:27.125Z",
     "createdAt": "2025-12-16T11:28:20.335Z"
+  },
+  {
+    "title": "Admin project",
+    "slug": "admin-project",
+    "description": "Project created from admin",
+    "status": "In-Build",
+    "category": "website",
+    "id": "8JOGS8f0pZf0VbTRM7ilz",
+    "updatedAt": "2025-12-23T16:46:46.094Z",
+    "createdAt": "2025-12-23T16:46:46.094Z"
   }
 ]
