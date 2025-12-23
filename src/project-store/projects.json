@@ -28,5 +28,15 @@
     "id": "XxtfUUV4N2_AGN5FIojM_",
     "updatedAt": "2025-12-21T09:38:27.125Z",
     "createdAt": "2025-12-16T11:28:20.335Z"
+  },
+  {
+    "title": "Admin Project",
+    "slug": "admin-project",
+    "description": "created from admin page",
+    "status": "In-Build",
+    "category": "app",
+    "id": "5HXEvGILAVTIni9DGeDMf",
+    "updatedAt": "2025-12-23T11:14:03.965Z",
+    "createdAt": "2025-12-23T11:14:03.965Z"
   }
 ]
