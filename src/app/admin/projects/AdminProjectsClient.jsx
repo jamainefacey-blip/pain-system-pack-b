@@ -33,7 +33,7 @@ export default function AdminProjectsClient() {
     title: '',
     slug: '',
     description: '',
-    status: 'in-progress',
+    status: 'In-Build',
     category: 'website',
   });
   const [loading, setLoading] = useState(true);
@@ -45,6 +45,53 @@ export default function AdminProjectsClient() {
   const [itemsPerPage] = useState(10); // Change this to show more/fewer per page
 
   const router = useRouter();
+
+  //table column resizing
+const [colWidths, setColWidths] = useState({
+  select: 48,
+  title: 100,
+  slug: 100,
+  description: 100,
+  status: 80,
+  category: 100,
+  created: 100,
+  updated: 100,
+  actions: 110,
+});
+
+
+//resize handler
+
+const startResize = (key, startX) => {
+  const startWidth = colWidths[key];
+
+  const onMouseMove = (e) => {
+    const delta = e.clientX - startX;
+
+    setColWidths((prev) => {
+      const next = {
+        ...prev,
+        [key]: Math.max(80, startWidth + delta),
+      };
+
+      return next;
+    });
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', () => {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.body.style.cursor = 'col-resize';
+document.body.style.userSelect = 'none';
+document.body.style.cursor = '';
+document.body.style.userSelect = '';
+
+
+  }, { once: true });
+};
+
+
+
 
   // Auto-generate slug
   useEffect(() => {
@@ -133,7 +180,7 @@ export default function AdminProjectsClient() {
     if (res.ok) {
       toast.success(editingProject ? 'Updated!' : 'Created!');
       fetchProjects();
-      setFormData({ title: '', slug: '', description: '', status: 'in-progress', category: 'website' });
+      setFormData({ title: '', slug: '', description: '', status: 'In-Build', category: 'website' });
       setEditingProject(null);
       setIsEditorOpen(false);
     } else {
@@ -147,7 +194,7 @@ export default function AdminProjectsClient() {
       title: project.title || '',
       slug: project.slug || '',
       description: project.description || '',
-      status: project.status || 'in-progress',
+      status: project.status || 'In-Build',
       category: project.category || 'website',
     });
     setIsEditorOpen(true);
@@ -164,14 +211,14 @@ export default function AdminProjectsClient() {
   };
 
   const handleToggleStatus = async (project) => {
-    const newStatus = project.status === 'active' ? 'paused' : 'active';
+    const newStatus = project.status === 'Live' ? 'In-Build' : 'Concept';
     const res = await fetch('/api/projects', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...project, status: newStatus }),
     });
     if (res.ok) {
-      toast.success(newStatus === 'active' ? 'Published' : 'Unpublished');
+      toast.success(newStatus === 'Live' ? 'Published' : 'Unpublished');
       fetchProjects();
     }
   };
@@ -187,9 +234,9 @@ export default function AdminProjectsClient() {
       if (action === 'delete') {
         await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
       } else if (action === 'publish') {
-        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'active' }) });
+        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'Live' }) });
       } else if (action === 'unpublish') {
-        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'paused' }) });
+        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'Concept' }) });
       }
     }
     toast.success(`Bulk ${action} completed`);
@@ -220,7 +267,17 @@ export default function AdminProjectsClient() {
     <>
       <Toaster position="top-right" />
 
-      <div className="container mx-auto px-4 py-8 lg:px-8 lg:py-12 max-w-7xl">
+      <div
+  className="
+    px-4 py-8
+    sm:px-6
+    lg:px-8 lg:py-12
+    w-full
+    max-w-none
+    overflow-x-hidden
+  "
+>
+
         {/* Header Space */}
       <div className="h-16 md:h-20"></div>
         {/* Page Title */}
@@ -247,7 +304,7 @@ export default function AdminProjectsClient() {
               </div>
               {!isEditorOpen && (
                 <button 
-                  onClick={(e) => { e.stopPropagation(); setIsEditorOpen(true); setEditingProject(null); setFormData({ title: '', slug: '', description: '', status: 'in-progress', category: 'website' }); }}
+                  onClick={(e) => { e.stopPropagation(); setIsEditorOpen(true); setEditingProject(null); setFormData({ title: '', slug: '', description: '', status: 'In-Build', category: 'website' }); }}
                   className="text-sm font-medium text-orange-600 hover:text-orange-700"
                 >
                   + New Project
@@ -263,9 +320,9 @@ export default function AdminProjectsClient() {
                   <textarea placeholder="Description *" value={formData.description} onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={5} required className="w-full px-5 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-orange-500 resize-none transition" />
                   <div className="grid grid-cols-2 gap-4">
                     <select value={formData.status} onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))} className="px-5 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
-                      <option value="active">Active</option>
-                      <option value="in-progress">In Progress</option>
-                      <option value="paused">Paused</option>
+                      <option value="Live">Live</option>
+                      <option value="In-Build">In Build</option>
+                      <option value="Concept">Concept</option>
                     </select>
                     <select value={formData.category} onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))} className="px-5 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                       <option value="website">Website</option>
@@ -278,7 +335,7 @@ export default function AdminProjectsClient() {
                   <button type="submit" className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-5 rounded-xl text-lg shadow-xl transition transform hover:scale-105 flex items-center justify-center gap-3">
                     {editingProject ? 'Update Project' : 'Create Project'}
                   </button>
-                  <button type="button" onClick={() => { setIsEditorOpen(false); setEditingProject(null); setFormData({ title: '', slug: '', description: '', status: 'in-progress', category: 'website' }); }} className="w-full text-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                  <button type="button" onClick={() => { setIsEditorOpen(false); setEditingProject(null); setFormData({ title: '', slug: '', description: '', status: 'In-Build', category: 'website' }); }} className="w-full text-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                     Cancel
                   </button>
                 </form>
@@ -325,12 +382,24 @@ export default function AdminProjectsClient() {
                 </div>
 
                 {/* Desktop: Fully Responsive Table */}
-<div className="hidden lg:block overflow-x-auto -mx-6 px-6">
-  <div className="inline-block min-w-full align-middle">
-    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-      <thead className="bg-gray-50 dark:bg-gray-700">
+<div className="hidden lg:block relative">
+  <div className="overflow-x-auto overscroll-x-contain max-h-[70vh]">
+
+<div className="w-full align-middle">
+
+    <table
+  className="
+    w-full
+    table-fixed
+    border-collapse
+    divide-y divide-gray-200 dark:divide-gray-700
+  "
+>
+
+      <thead className="bg-gray-50 dark:bg-gray-700 sticky top-0 z-20 shadow-sm">
+
         <tr>
-          <th className="w-12 px-3 py-4 text-left">
+          <th className="w-12 px-3 py-4">
             <button onClick={selectAll}>
               {selectedIds.size === currentProjects.length && currentProjects.length > 0 ? 
                 <CheckSquare className="w-5 h-5 text-orange-600" /> : 
@@ -338,14 +407,100 @@ export default function AdminProjectsClient() {
               }
             </button>
           </th>
-          <th className="px-3 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Title</th>
-          <th className="px-3 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Slug</th>
-          <th className="px-3 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Description</th>
-          <th className="px-3 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Status</th>
-          <th className="px-3 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Category</th>
-          <th className="px-3 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Created</th>
-          <th className="px-3 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Updated</th>
-          <th className="px-3 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+        <th
+  style={{ width: colWidths.title }}
+  className="relative px-3 py-4 text-left font-semibold"
+>
+  Title
+  <span
+    onMouseDown={(e) => startResize('title', e.clientX)}
+    className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+  />
+</th>
+
+
+          {/* Slug */}
+  <th
+    style={{ width: colWidths.slug }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Slug
+    <span
+      onMouseDown={(e) => startResize('slug', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+          <th
+  style={{ width: colWidths.description }}
+  className="relative px-3 py-4 text-left font-semibold"
+>
+
+  Description
+  <span
+    onMouseDown={(e) => startResize('description', e.clientX)}
+    className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+  />
+</th>
+
+
+          {/* Status */}
+  <th
+    style={{ width: colWidths.status }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Status
+    <span
+      onMouseDown={(e) => startResize('status', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+          {/* Category */}
+  <th
+    style={{ width: colWidths.category }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Category
+    <span
+      onMouseDown={(e) => startResize('category', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+
+  {/* Created */}
+  <th
+    style={{ width: colWidths.created }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Created
+    <span
+      onMouseDown={(e) => startResize('created', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+
+  {/* Updated */}
+  <th
+    style={{ width: colWidths.updated }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Updated
+    <span
+      onMouseDown={(e) => startResize('updated', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+
+  {/* Actions */}
+  <th
+    style={{ width: colWidths.actions }}
+    className="relative px-3 py-4 text-right font-semibold"
+  >
+    Actions
+    <span
+      onMouseDown={(e) => startResize('actions', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
         </tr>
       </thead>
       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -377,11 +532,11 @@ export default function AdminProjectsClient() {
               </td>
               <td className="px-3 py-4">
                 <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                  project.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
-                  project.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 
+                  project.status === 'Live' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                  project.status === 'In-Build' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 
                   'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
                 }`}>
-                  {project.status || 'paused'}
+                  {project.status || 'Concept'}
                 </span>
               </td>
               <td className="px-3 py-4 text-sm text-gray-600 dark:text-gray-400 capitalize">
@@ -406,6 +561,7 @@ export default function AdminProjectsClient() {
       </tbody>
     </table>
   </div>
+</div>
 </div>
 
                 {/* Mobile: Cards */}
@@ -432,8 +588,8 @@ export default function AdminProjectsClient() {
                           </div>
                           <p className="text-gray-600 dark:text-gray-400 line-clamp-2">{project.description || 'No description'}</p>
                           <div className="flex flex-wrap gap-3">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${project.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : project.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}>
-                              {project.status || 'paused'}
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${project.status === 'Live' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : project.status === 'In-Build' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}>
+                              {project.status || 'Concept'}
                             </span>
                             <span className="text-gray-500 capitalize">{project.category || '—'}</span>
                           </div>

@@ -1,255 +1,235 @@
-# Website UI + Admin Projects Logic
-
-> ⚠️ **IMPORTANT:** Always run `git pull` before pushing any code.  
-> If the `projects.json` file was updated on GitHub and you push without pulling, you will overwrite the live data.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Features & Structure](#features--structure)
-  - [Public Website](#public-website)
-  - [Admin Authentication](#admin-authentication)
-  - [Portal Application](#portal-application)
-  - [Automations & Project Builder](#automations--project-builder)
-  - [Folder Structure](#folder-structure)
-  - [Design Theme](#design-theme)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Environment Variables](#environment-variables)
-  - [Installation](#installation)
-  - [Development](#development)
-- [Build & Run (Production)](#build--run-production)
-- [Deployment to Netlify](#deployment-to-netlify)
-- [Testing](#testing)
-
----
+# Pain System Pack-B – Website Application
 
 ## Overview
 
-This project includes a complete public website, an admin portal, and a project management system powered by a `projects.json` file stored in GitHub.
+This application consists of a public-facing website and a private backend administration system.
+The system has placeholder pages, fully functional pages, and a complete Projects CRUD workflow backed by a JSON data store synchronized with GitHub.
 
-The website loads all its project data from `projects.json`, and the admin portal allows CRUD operations that write directly to GitHub using API requests. Each update to the file triggers Netlify to redeploy the site, ensuring all project data stays synced.
-
-### Key Features Added
-
-- Website Projects page displays all items from `projects.json`
-- Dynamic project detail pages using `[slug]`
-- `/admin/projects` provides:
-  - View all
-  - Create
-  - Edit
-  - Delete
-  - Bulk edit
-  - Search
-- `/automations/projects-builder` enables full CRUD as well
-- API endpoints created for:
-  - Authentication
-  - GitHub file CRUD operations
-- Website pages reorganized into `/website/`
-- Portal dashboard displays data from `projects.json`
+Authentication is handled via environment variables, no credentials are hardcoded.
 
 ---
 
-## Tech Stack
+## 1. Public Website (Frontend)
 
-- **Next.js 16** (App Router)
-- **React 19**
-- **Node.js**
-- **TailwindCSS / CSS Modules / Styled Components**
-- **GitHub API** for remote file storage
-- **Netlify** deployment
+The public website consumes data from `projects.json` and displays it to end users.
 
----
+### Header Navigation
 
-## Features & Structure
+The top navigation includes:
 
-### Public Website
+* Home
+* About
+* Contact
+* Accessibility
+* Login (button)
 
-- Home
-- About
-- Services
-- Contact
-- Projects (dynamic)
-- Each project has its own slug route
-- Login entry point
+### Footer
 
-### Admin Authentication
+The footer mirrors the header for consistent navigation and may include additional links when required.
 
-- Login uses:
-  - `ADMIN_EMAIL`
-  - `ADMIN_PASSWORD`
-- Signup & reset pages exist as placeholders
+### Homepage Sections
 
-### Portal Application
+The homepage includes:
 
-- Dashboard
-- My Projects
-- Builder
-- Notifications
-- Logout
+* Hero section
+* About section
+* Services preview
+* Contact section
 
-### Automations & Project Builder
+### File Locations
 
-- CRUD for `projects.json`
-- GitHub write operations
-- Safe validation
-
-
-### Folder Structure (Visualized)
-
-- src/
-  - app/
-    - (auth)/
-      - login/page.js
-      - signup/page.js
-      - forgot-password/page.js
-    - website
-      - about/page.js
-      - contact/page.js
-      - services/page.js
-      - projects
-        - [slug]
-          - page.jsx
-        - page.jsx
-    - api
-      - auth
-        - check/route.js - checking if user is admin to make changes to rojects.json
-        - login/route.js - logging in
-      -projects
-        - route.js - holds all logic for projects admin CRUD operations to projects.json
-    - admin
-      - projects
-        - AdminProjectsClient.jsx
-        - page.jsx
-    - portal/
-      - dashboard/page.js
-      - builder/page.js
-      - my-projects/page.js
-      - notifications/page.js
-      - logout/page.js
-    - automations
-      - vst-website-automation/
-        - home/page.js
-        - search/page.js
-        - results/page.js
-        - map/page.js
-        - safety/page.js
-      - projects-builder
-        -page.jsx
-  - components/
-    - common/
-      - Footer.js
-      - Header.js
-      - Sidebar.js
-      - ThemeToggle.js
-    - sections/
-      - AboutSection.jsx
-      - ContactSection.jsx
-      - Hero.jsx
-      - MeetTeam.jsx
-      - ServicesOffering.jsx
-      - Testimonial.js
-  - assets/
-
-### Design Theme
-
-- Neutral, generic look:
-  - Base colors: black + white
-  - Accent color: orange for interactive elements (buttons, highlights)
-- Provides a clean, modern appearance that can be easily adapted to a specific use case
+* Header & Footer: `src/components/common/`
+* Homepage sections: `src/components/sections/`
+* Website pages: `src/app/website/`
 
 ---
 
-## Getting Started
+## 2. Administrator Area (Private Backend)
 
-### Prerequisites
+The admin system is a secured area accessible only after login.
 
-- Node.js (>= 14.x; or as required by your project)
-- npm or yarn
-- Git
+### Authentication
 
-.env file/environmental variables set with these variables:
+Authentication uses environment variables that must be defined locally or in Vercel/Netlify:
 
-ADMIN_EMAIL=email to use for login
-ADMIN_PASSWORD=password used for login
+```env
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+```
 
-GITHUB_TOKEN=github_pat_**** (click on profile -> setting -> Dveloper Option at th left sidebar botton -> Persoal Access Tokens
-                              -> Fine-grained tokens -> Give it a name and add read and right permissions to all repository permissions)
-GITHUB_OWNER=Github username
-GITHUB_REPO=Github repository name(i.e: pain-system-pack-b)
-GITHUB_BRANCH=Repo Branch(master/main etc)
+### System Sections
 
+The backend is divided into three main areas, each with its own layout and navigation rules.
+
+Each section contains a `layout` file that controls sidebar navigation visibility based on the active system area.
 
 ---
 
-### Installation
+### i. Admin System
 
-## Local:
+* Admin login
+* Projects table
+* Create / Edit / Delete projects
+* JSON data synchronization with GitHub
 
-https://github.com/Gabriel265/pain-system-pack-b.git
-cd thepainsystem
+---
 
-npm install
-npm run dev
+### ii. Portal (Admin)
 
+* Admin-only access
+* Project CRUD operations
+* Project status tagging:
 
-## Deployment to Netlify:
+  * `idea`
+  * `build`
+  * `live`
 
-1. Push your project to GitHub
+Portal Routes:
 
-Netlify pulls from your repo.
+* `/builder`
+* `/dashboard`
+* `/notifications`
+* `/projects`
 
-2. Connect Netlify to your GitHub repo
+---
 
-Go to Netlify → Add new site → Import from Git
+### iii. Automation
 
-Choose your repo
+#### a. Projects Builder
 
-Leave defaults:
+* Create, edit, delete projects
+* Toggle Draft / Live status
+* Writes changes to `projects.json`
 
-Build: npm run build
+#### b. VST Website Automation
 
-Publish: .next
+* VST-specific automation logic
+* Placeholder pages
 
-3. Add environment variables
+---
 
-Go to:
+## 3. API Routing & Data Management
 
-Site Settings → Environment Variables
+All authentication and project CRUD logic is handled via API routes.
 
-Add:
+### API Location
 
-ADMIN_EMAIL
-ADMIN_PASSWORD
-GITHUB_TOKEN
-GITHUB_OWNER
-GITHUB_REPO
-GITHUB_BRANCH
+```
+src/app/api/
+```
 
-4. Enable auto-redeploy
+### API Routes
 
-Go to:
+#### Auth
 
-Site Settings → Build & Deploy → Continuous Deployment
+```
+/api/auth
+  ├── login
+  └── check
+```
 
-Turn on:
+* Handles login validation
+* Verifies admin access
 
-Auto Publish Deploys
+#### Projects
 
-5. How updates work
+```
+/api/projects
+```
 
-Admin updates projects via the portal → GitHub file updates
+* Handles admin-side CRUD operations
+* Updates the GitHub-hosted `projects.json` file
 
-OR admin edits the file directly in GitHub
+> Since Vercel/Netlify deployments are static after build, direct file mutation is not possible in production.
+> Instead, API routes update the JSON file in GitHub, triggering a rebuild.
 
-GitHub commit triggers Netlify
+---
 
-Netlify rebuilds
+## 4. Folder Structure
 
-Website shows updated data
+```
+root folder
+.github
+ ___ /workflows
+     ___ pain-system-auto-deploy.yml #auto deploy script 
 
+/src
+├── /components
+│   ├── /common        # Header, Footer, Sidebar
+│   └── /sections      # Hero, About, Services, Contact
+│
+├── /app
+│   ├── /(auth)        # Login page
+│   ├── /admin
+│   ├── /portal
+│   │   ├── /builder
+│   │   ├── /dashboard
+│   │   ├── /notifications
+│   │   └── /projects
+│   │
+│   ├── /website
+│   │   ├── /about
+│   │   ├── /accessibility-&-inclusion
+│   │   ├── /contact
+│   │   ├── /projects
+│   │   │   └── [slug]
+│   │   └── /services
+│   │
+│   ├── /automation
+│   │   ├── /projects-builder
+│   │   └── /vst-website-automation
+│   │
+│   └── /api
+│       ├── /auth
+│       │   ├── check
+│       │   └── login
+│       └── /projects
+│
+├── /project-store
+│   └── projects.json
+```
 
+---
+
+## 5. Deployment Strategy
+
+The system uses two primary Git branches:
+
+### Branches
+
+* `main` → Production
+* `ai-deploy` → Development
+
+### Deployment Flow
+
+1. Changes are pushed to `ai-deploy`
+2. A GitHub Action automatically merges `ai-deploy` → `main`
+3. Vercel detects the update on `main`
+4. Production rebuild and deployment is triggered
+
+Both branches are deployed, but only `main` is used for production.
+
+---
+
+## 6. AI-Assisted Development
+
+The codebase is intentionally structured for AI-assisted development:
+
+* Clear folder separation
+* Predictable imports
+* Descriptive naming
+* Inline comments where necessary
+
+This allows AI models to easily understand context, structure, and intent when working with the codebase.
+
+---
+
+## 7. Additional Documentation
+
+For more details:
+
+* System Architecture: `ARCHITECTURE.md`
+* Run & Operations Guide: `RUNBOOK.md`
+
+---
 

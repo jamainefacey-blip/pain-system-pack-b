@@ -17,7 +17,7 @@ import {
   X,
 } from 'lucide-react';
 
-export default function PortalProjects() {
+export default function PortalProjectsClient() {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -27,7 +27,7 @@ export default function PortalProjects() {
     title: '',
     slug: '',
     description: '',
-    status: 'in-progress',
+    status: 'In-Build',
     category: 'website',
   });
   const [loading, setLoading] = useState(true);
@@ -102,7 +102,7 @@ export default function PortalProjects() {
   // Form handlers
   const openCreateModal = () => {
     setEditingProject(null);
-    setFormData({ title: '', slug: '', description: '', status: 'in-progress', category: 'website' });
+    setFormData({ title: '', slug: '', description: '', status: 'In-Build', category: 'website' });
     setIsModalOpen(true);
   };
 
@@ -112,7 +112,7 @@ export default function PortalProjects() {
       title: project.title || '',
       slug: project.slug || '',
       description: project.description || '',
-      status: project.status || 'in-progress',
+      status: project.status || 'In-Build',
       category: project.category || 'website',
     });
     setIsModalOpen(true);
@@ -121,7 +121,7 @@ export default function PortalProjects() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingProject(null);
-    setFormData({ title: '', slug: '', description: '', status: 'in-progress', category: 'website' });
+    setFormData({ title: '', slug: '', description: '', status: 'In-Build', category: 'website' });
   };
 
   const handleSubmit = async (e) => {
@@ -164,14 +164,14 @@ export default function PortalProjects() {
   };
 
   const handleToggleStatus = async (project) => {
-    const newStatus = project.status === 'active' ? 'paused' : 'active';
+    const newStatus = project.status === 'Live' ? 'Concept' : 'Live';
     const res = await fetch('/api/projects', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...project, status: newStatus }),
     });
     if (res.ok) {
-      toast.success(newStatus === 'active' ? 'Published' : 'Unpublished');
+      toast.success(newStatus === 'Live' ? 'Published' : 'Unpublished');
       fetchProjects();
     }
   };
@@ -186,9 +186,9 @@ export default function PortalProjects() {
       if (action === 'delete') {
         await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
       } else if (action === 'publish') {
-        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'active' }) });
+        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'Live' }) });
       } else if (action === 'unpublish') {
-        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'paused' }) });
+        await fetch('/api/projects', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...project, status: 'Concept' }) });
       }
     }
     toast.success(`Bulk ${action} completed`);
@@ -215,11 +215,64 @@ export default function PortalProjects() {
   const formatDate = (d) => d ? format(new Date(d), 'MMM d, yyyy') : '—';
   const formatDateTime = (d) => d ? format(new Date(d), 'MMM d, yyyy • h:mm a') : '—';
 
+  //table column resizing
+const [colWidths, setColWidths] = useState({
+  select: 48,
+  title: 100,
+  slug: 100,
+  description: 100,
+  status: 80,
+  category: 100,
+  created: 100,
+  updated: 100,
+  actions: 110,
+});
+
+
+//resize handler
+
+const startResize = (key, startX) => {
+  const startWidth = colWidths[key];
+
+  const onMouseMove = (e) => {
+    const delta = e.clientX - startX;
+
+    setColWidths((prev) => {
+      const next = {
+        ...prev,
+        [key]: Math.max(80, startWidth + delta),
+      };
+
+      return next;
+    });
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', () => {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.body.style.cursor = 'col-resize';
+document.body.style.userSelect = 'none';
+document.body.style.cursor = '';
+document.body.style.userSelect = '';
+
+
+  }, { once: true });
+};
+
   return (
     <>
       <Toaster position="top-right" />
 
-      <div className="container mx-auto px-4 py-8 lg:px-8 lg:py-12 max-w-7xl">
+      <div
+  className="
+    px-4 py-8
+    sm:px-6
+    lg:px-8 lg:py-12
+    w-full
+    max-w-none
+    overflow-x-hidden
+  "
+>
         <div className="h-16 md:h-20"></div>
 
         {/* Header */}
@@ -267,28 +320,125 @@ export default function PortalProjects() {
         </div>
 
         {/* Table (Desktop) */}
-        <div className="hidden lg:block bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1000px]">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+        <div className="hidden lg:block relative">
+  <div className="overflow-x-auto overscroll-x-contain max-h-[70vh]">
+
+<div className="w-full align-middle">
+
+    <table
+  className="
+    w-full
+    table-fixed
+    border-collapse
+    divide-y divide-gray-200 dark:divide-gray-700
+  "
+>
+
+      <thead className="bg-gray-50 dark:bg-gray-700 sticky top-0 z-20 shadow-sm">
                 <tr>
-                  <th className="w-12 px-4 py-4 text-left">
-                    <button onClick={selectAll}>
-                      {selectedIds.size === currentProjects.length && currentProjects.length > 0 ? 
-                        <CheckSquare className="w-5 h-5 text-orange-600" /> : 
-                        <Square className="w-5 h-5 text-gray-400" />
-                      }
-                    </button>
-                  </th>
-                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider min-w-48">Title</th>
-                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider min-w-32">Slug</th>
-                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider min-w-64 max-w-96">Description</th>
-                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-28">Status</th>
-                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Category</th>
-                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-36">Created</th>
-                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-36">Updated</th>
-                  <th className="px-4 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-40">Actions</th>
-                </tr>
+          <th className="w-12 px-3 py-4">
+            <button onClick={selectAll}>
+              {selectedIds.size === currentProjects.length && currentProjects.length > 0 ? 
+                <CheckSquare className="w-5 h-5 text-orange-600" /> : 
+                <Square className="w-5 h-5 text-gray-400" />
+              }
+            </button>
+          </th>
+        <th
+  style={{ width: colWidths.title }}
+  className="relative px-3 py-4 text-left font-semibold"
+>
+  Title
+  <span
+    onMouseDown={(e) => startResize('title', e.clientX)}
+    className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+  />
+</th>
+
+
+          {/* Slug */}
+  <th
+    style={{ width: colWidths.slug }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Slug
+    <span
+      onMouseDown={(e) => startResize('slug', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+          <th
+  style={{ width: colWidths.description }}
+  className="relative px-3 py-4 text-left font-semibold"
+>
+
+  Description
+  <span
+    onMouseDown={(e) => startResize('description', e.clientX)}
+    className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+  />
+</th>
+
+
+          {/* Status */}
+  <th
+    style={{ width: colWidths.status }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Status
+    <span
+      onMouseDown={(e) => startResize('status', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+          {/* Category */}
+  <th
+    style={{ width: colWidths.category }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Category
+    <span
+      onMouseDown={(e) => startResize('category', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+
+  {/* Created */}
+  <th
+    style={{ width: colWidths.created }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Created
+    <span
+      onMouseDown={(e) => startResize('created', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+
+  {/* Updated */}
+  <th
+    style={{ width: colWidths.updated }}
+    className="relative px-3 py-4 text-left font-semibold"
+  >
+    Updated
+    <span
+      onMouseDown={(e) => startResize('updated', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+
+  {/* Actions */}
+  <th
+    style={{ width: colWidths.actions }}
+    className="relative px-3 py-4 text-right font-semibold"
+  >
+    Actions
+    <span
+      onMouseDown={(e) => startResize('actions', e.clientX)}
+      className="absolute right-0 top-0 h-full w-1 cursor-col-resize bg-black/20"
+    />
+  </th>
+        </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {loading ? (
@@ -302,7 +452,7 @@ export default function PortalProjects() {
                       <td className="px-4 py-4 font-medium text-gray-900 dark:text-gray-100 truncate max-w-64">{project.title || 'Untitled'}</td>
                       <td className="px-4 py-4 text-sm font-mono text-gray-600 dark:text-gray-400 truncate max-w-48">/{project.slug || '—'}</td>
                       <td className="px-4 py-4 text-sm text-gray-600 dark:text-gray-400"><div className="line-clamp-2 max-w-96">{project.description || 'No description'}</div></td>
-                      <td className="px-4 py-4"><span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${project.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : project.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}>{project.status || 'paused'}</span></td>
+                      <td className="px-4 py-4"><span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${project.status === 'Live' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : project.status === 'In-Build' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}>{project.status || 'Concept'}</span></td>
                       <td className="px-4 py-4 text-sm text-gray-600 dark:text-gray-400 capitalize">{project.category || '—'}</td>
                       <td className="px-4 py-4 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{formatDate(project.createdAt)}</td>
                       <td className="px-4 py-4 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{formatDateTime(project.updatedAt)}</td>
@@ -320,6 +470,7 @@ export default function PortalProjects() {
             </table>
           </div>
         </div>
+      </div>
 
         {/* Mobile Cards */}
         <div className="lg:hidden space-y-4">
@@ -342,8 +493,8 @@ export default function PortalProjects() {
                   <div className="font-mono text-gray-600 dark:text-gray-400">/{project.slug || '—'}</div>
                   <p className="text-gray-600 dark:text-gray-400 line-clamp-2">{project.description || 'No description'}</p>
                   <div className="flex flex-wrap gap-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${project.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : project.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}>
-                      {project.status || 'paused'}
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${project.status === 'Live' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : project.status === 'In-Build' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}>
+                      {project.status || 'Concept'}
                     </span>
                     <span className="text-gray-500 capitalize">{project.category || '—'}</span>
                   </div>
@@ -412,9 +563,9 @@ export default function PortalProjects() {
               <textarea placeholder="Description *" value={formData.description} onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))} rows={5} required className="w-full px-5 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-orange-500 resize-none transition" />
               <div className="grid grid-cols-2 gap-4">
                 <select value={formData.status} onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))} className="px-5 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
-                  <option value="active">Active</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="paused">Paused</option>
+                  <option value="Live">Live</option>
+                  <option value="In-Build">In Build</option>
+                  <option value="Concept">Concept</option>
                 </select>
                 <select value={formData.category} onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))} className="px-5 py-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                   <option value="website">Website</option>

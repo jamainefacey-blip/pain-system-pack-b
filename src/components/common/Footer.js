@@ -7,15 +7,16 @@ export default function Footer() {
 
   const footerLinks = {
     company: [
-      { name: "Projects", href: "/website/projects" },
+    { name: "Projects", href: "/website/projects" },
+    { name: "Accessbility", href: "/website/accessibility-&-inclusion" },
     { name: "About", href: "/website/about" },
     { name: "Services", href: "/website/services" },
     { name: "Contact", href: "/website/contact" },
     ],
     services: [
-      { name: "Service One Title", href: "/consulting" },
-      { name: "Service Two Title", href: "/analytics" },
-      { name: "Service Three Title", href: "/integration" },
+      { name: "Title", href: "#" },
+      { name: "Title", href: "#" },
+      { name: "Title", href: "#" },
     ],
     legal: [
       { name: "Privacy Policy", href: "#" },
@@ -69,24 +70,24 @@ export default function Footer() {
             <a href="#" className="flex items-center space-x-2 mb-6">
               <TrendingUp className="w-8 h-8 text-orange-500" />
               <span className="text-xl font-bold text-foreground">
-                The Pain System
+                Website Name
               </span>
             </a>
             <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-              Transforming pain into progress through innovative systems and strategic insights.
+              Description
             </p>
             <div className="space-y-3">
               <a href="mailto:hello@thepainsystem.com" className="flex items-center text-gray-600 dark:text-gray-400 hover:text-orange-500 transition">
                 <Mail className="w-4 h-4 mr-3" />
-                hello@thepainsystem.com
+               Email
               </a>
-              <a href="tel:+1234567890" className="flex items-center text-gray-600 dark:text-gray-400 hover:text-orange-500 transition">
+              <a href="#" className="flex items-center text-gray-600 dark:text-gray-400 hover:text-orange-500 transition">
                 <Phone className="w-4 h-4 mr-3" />
-                +1 (234) 567-890
+                Phone Number
               </a>
               <div className="flex items-start text-gray-600 dark:text-gray-400">
                 <MapPin className="w-4 h-4 mr-3 mt-1 flex-shrink-0" />
-                <span>123 Innovation Street<br />San Francisco, CA 94102</span>
+                <span>Street<br />Address</span>
               </div>
             </div>
           </div>
