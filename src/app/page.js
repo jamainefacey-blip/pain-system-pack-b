@@ -6,7 +6,7 @@ import ContactSection from "@/components/sections/ContactSection.jsx";
 export default function Home() {
   return (
     <>
-      <HeroSection />
+      <HeroSection/>
       <ServicesOffering />
       <AboutSection />
       <ContactSection />

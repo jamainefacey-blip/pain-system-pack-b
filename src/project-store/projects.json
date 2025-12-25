@@ -12,7 +12,7 @@
   {
     "title": "Hangar",
     "slug": "hangar",
-    "description": "An  idea-to-build space.",
+    "description": "Subscriber-only idea-to-build space (Hangar).",
     "status": "In-Build",
     "category": "portal",
     "id": "cakKHBHTo3sECAUGQqLRk",
@@ -68,5 +68,15 @@
     "id": "QvVVpaYoTvzV-aYCFA7BM",
     "updatedAt": "2025-12-23T16:49:41.537Z",
     "createdAt": "2025-12-23T16:49:41.537Z"
+  },
+  {
+    "title": "Pain system core",
+    "slug": "pain-system-core",
+    "description": "The central platform layer for the Pain System, providing accessibility-first access, governance controls, and secure portals that adapt to individual user needs while enforcing organisational rules.",
+    "status": "In-Build",
+    "category": "website",
+    "id": "FfxxpK_QU1kDZGdDXTB9w",
+    "updatedAt": "2025-12-25T13:42:08.379Z",
+    "createdAt": "2025-12-25T13:42:08.379Z"
   }
 ]
