@@ -1,5 +1,5 @@
 // src/app/admin/layout.js
-import Sidebar from "@/components/common/Sidebar";
+import Sidebar from "../../components/common/Sidebar";
 
 export default function AdminLayout({ children }) {
   return (
