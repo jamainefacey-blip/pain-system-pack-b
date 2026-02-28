@@ -1,7 +1,7 @@
 // src/app/layout.js
 import "./globals.css";
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
 
 export const metadata = {
   title: "The Pain System",
