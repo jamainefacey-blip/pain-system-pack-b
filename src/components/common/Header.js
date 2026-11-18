@@ -52,7 +52,7 @@ export default function Header() {
   const navItems = [
     { name: "Home", href: "/" },
     { name: "Projects", href: "/website/projects" },
-    { name: "Accessbility", href: "/website/accessibility-&-inclusion" },
+    { name: "Accessibility", href: "/website/accessibility-&-inclusion" },
     { name: "About", href: "/website/about" },
     { name: "Services", href: "/website/services" },
     { name: "Contact", href: "/website/contact" },
@@ -158,7 +158,7 @@ export default function Header() {
 
             {/* Login Button */}
             <Link
-              href="/login"
+              href="/website/contact"
               className="inline-flex items-center px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full transition transform hover:scale-105"
             >
               Login <ArrowRight className="ml-2 w-4 h-4" />
@@ -217,11 +217,11 @@ export default function Header() {
 
 
       <Link
-        href="/login"
+        href="/website/contact"
         className="block w-full text-center py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full"
         onClick={() => setIsOpen(false)}
       >
-        Login
+        Enquire
       </Link>
     </div>
   </div>
