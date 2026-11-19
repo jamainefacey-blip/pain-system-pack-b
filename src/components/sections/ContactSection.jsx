@@ -1,199 +1,33 @@
-'use client';
+import Link from "next/link";
 
-import { useState } from 'react';
-
+// A mailto handoff is truthful without a connected mail provider.
+// Do not replace it with an apparent success toast until a real server receipt exists.
 export default function ContactSection() {
-  /**
-   * Form state
-   * Keep keys generic so backend/API mapping stays flexible
-   */
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-
-  /**
-   * UI feedback state
-   * Controls temporary notification after submit
-   */
-  const [showToast, setShowToast] = useState(false);
-
-  /**
-   * Handle form submission
-   */
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Temporary feedback for user action
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-
-    // Reset form after submit
-    setFormData({ name: '', email: '', message: '' });
-  };
-
-  /**
-   * Generic input handler
-   * Relies on `name` attribute matching state keys
-   */
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
+  const address = "hello@thepainsystem.com";
   return (
-    <section className="min-h-screen bg-background transition-colors duration-300">
-      {/* 
-        Toast / Notification
-        Used only for UX feedback, not validation
-      */}
-      {showToast && (
-        <div className="fixed top-4 right-4 z-50 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg animate-slideIn">
-          <p className="text-sm font-medium">Submission received</p>
+    <section id="contact" aria-labelledby="contact-heading" className="bg-white px-5 py-16 text-slate-950 dark:bg-zinc-950 dark:text-white sm:px-8 sm:py-24">
+      <div className="mx-auto grid max-w-6xl gap-9 rounded-3xl border border-slate-200 bg-slate-50 p-6 dark:border-zinc-700 dark:bg-zinc-900 sm:p-12 lg:grid-cols-2">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-red-600 dark:text-red-400">Talk to The Pain System</p>
+          <h2 id="contact-heading" className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Tell us what your business needs.</h2>
+          <p className="mt-5 max-w-md leading-relaxed text-slate-600 dark:text-zinc-300">
+            Describe the problem, your business and the outcome you want. We will review the enquiry before discussing scope or costs.
+          </p>
+          <p className="mt-4 text-sm text-slate-500 dark:text-zinc-400">No automated purchase, contract or payment is created here.</p>
+          <Link href="/factory" className="mt-6 inline-block font-semibold text-red-700 underline underline-offset-4 dark:text-red-300">Explore The Factory</Link>
         </div>
-      )}
-
-      <div className="container mx-auto px-4 py-12 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-
-          {/* 
-            LEFT COLUMN — STRUCTURAL PLACEHOLDER
-            Can be replaced later with media, illustration, map, or removed entirely
-          */}
-          <div className="hidden lg:block h-[500px] rounded-2xl border border-dashed border-gray-400 dark:border-gray-700 flex items-center justify-center">
-            <span className="text-sm text-gray-500">
-              Visual placeholder
-            </span>
-          </div>
-
-          {/* 
-            RIGHT COLUMN — FORM CONTAINER
-            This is the primary interactive area
-          */}
-          <div className="w-full max-w-xl mx-auto lg:mx-0">
-            <div className="mb-8 text-center lg:text-left">
-              <h2 className="text-4xl lg:text-5xl font-semibold text-foreground mb-6">
-                Contact Section
-              </h2>
-
-              {/* 
-                Static contact placeholders
-                Replace or remove depending on data source
-              */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">
-                    Label
-                  </p>
-                  <p className="text-foreground">Placeholder value</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">
-                    Label
-                  </p>
-                  <p className="text-foreground">Placeholder value</p>
-                </div>
-              </div>
-            </div>
-
-            {/* 
-              FORM FIELDS
-              Controlled inputs for predictable state flow
-            */}
-            <div className="space-y-5">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Text input"
-                className="w-full px-5 py-4 bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-gray-500"
-                required
-              />
-
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email input"
-                className="w-full px-5 py-4 bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-gray-500"
-                required
-              />
-
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Textarea input"
-                rows={6}
-                className="w-full px-5 py-4 bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-gray-500 resize-none"
-                required
-              />
-
-              {/* 
-                Submit action
-                Button only triggers handler — no implicit form submit
-              */}
-              <button
-                onClick={handleSubmit}
-                className="px-8 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-full transition-transform hover:scale-105"
-              >
-                Action
-              </button>
-            </div>
-
-            {/* 
-              Secondary information block
-              Can be repurposed for links, metadata, or removed
-            */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-6 mt-10 text-sm">
-              <div>
-                <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">
-                  Label
-                </p>
-                <p className="text-foreground">Placeholder</p>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">
-                  Label
-                </p>
-                <p className="text-foreground">Placeholder</p>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">
-                  Label
-                </p>
-                <p className="text-foreground">Placeholder</p>
-              </div>
-            </div>
-          </div>
+        <div className="self-center rounded-2xl border border-slate-200 bg-white p-7 dark:border-zinc-700 dark:bg-zinc-950">
+          <h3 className="text-xl font-bold">Email our team</h3>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-zinc-300">
+            Open a pre-addressed email draft. You must send it yourself using your email app. This site does not record or send enquiries automatically.
+          </p>
+          <a href="mailto:hello@thepainsystem.com?subject=Pain%20System%20business%20enquiry&body=Business%20name%3A%0AWhat%20I%20need%3A%0ATimeline%3A" className="mt-6 inline-flex min-h-12 items-center justify-center rounded-xl bg-red-600 px-6 py-3 font-semibold text-white outline-offset-4 hover:bg-red-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-red-600">
+            Open email draft
+          </a>
+          <p className="mt-5 break-all text-sm text-slate-600 dark:text-zinc-300">Address listed on our website: <a className="font-semibold underline underline-offset-4" href={"mailto:" + address}>{address}</a></p>
+          <p className="mt-2 text-xs text-slate-500 dark:text-zinc-400">Email delivery and response time are not guaranteed until separately verified.</p>
         </div>
       </div>
-
-      {/* 
-        Local animation
-        Scoped to component to avoid global CSS pollution
-      */}
-      <style jsx>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        .animate-slideIn {
-          animation: slideIn 0.3s ease-out;
-        }
-      `}</style>
     </section>
   );
 }
