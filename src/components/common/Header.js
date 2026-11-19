@@ -55,6 +55,7 @@ export default function Header() {
     { name: "Accessbility", href: "/website/accessibility-&-inclusion" },
     { name: "About", href: "/website/about" },
     { name: "Services", href: "/website/services" },
+    { name: "Factory", href: "/factory" },
     { name: "Contact", href: "/website/contact" },
   ];
 
